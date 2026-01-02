@@ -5,7 +5,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_INSTALL_DIR=/usr/local/bin
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl ca-certificates build-essential \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates \
+        build-essential \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
@@ -41,6 +47,14 @@ FROM python:3.13-slim AS prod
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:${PATH}"
+
+# Install runtime dependencies for OpenCV and Docling
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=build /app/.venv /app/.venv

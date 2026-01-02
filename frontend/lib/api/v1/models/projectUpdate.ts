@@ -7,9 +7,13 @@
 import type { ProjectUpdateName } from './projectUpdateName';
 import type { ProjectUpdateDescription } from './projectUpdateDescription';
 import type { ProjectUpdateStatus } from './projectUpdateStatus';
+import type { ProjectUpdateDocumentPath } from './projectUpdateDocumentPath';
+import type { ProjectUpdateDocumentFilename } from './projectUpdateDocumentFilename';
 
 export interface ProjectUpdate {
   name?: ProjectUpdateName;
   description?: ProjectUpdateDescription;
   status?: ProjectUpdateStatus;
+  document_path?: ProjectUpdateDocumentPath;
+  document_filename?: ProjectUpdateDocumentFilename;
 }

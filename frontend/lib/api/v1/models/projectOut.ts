@@ -6,12 +6,16 @@
  */
 import type { ProjectOutDescription } from './projectOutDescription';
 import type { ProjectOutStatus } from './projectOutStatus';
+import type { ProjectOutDocumentPath } from './projectOutDocumentPath';
+import type { ProjectOutDocumentFilename } from './projectOutDocumentFilename';
 
 export interface ProjectOut {
   name: string;
   description?: ProjectOutDescription;
   status?: ProjectOutStatus;
   id: number;
+  document_path?: ProjectOutDocumentPath;
+  document_filename?: ProjectOutDocumentFilename;
   created_at: string;
   updated_at: string;
 }

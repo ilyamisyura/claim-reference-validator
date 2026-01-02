@@ -31,6 +31,8 @@ export const listProjectsApiV1ProjectsGetResponse = zod.object({
   "description": zod.union([zod.string(),zod.null()]).optional(),
   "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(listProjectsApiV1ProjectsGetResponseDataItemStatusDefault),
   "id": zod.number(),
+  "document_path": zod.union([zod.string(),zod.null()]).optional(),
+  "document_filename": zod.union([zod.string(),zod.null()]).optional(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
 })).describe('List of items'),
@@ -65,6 +67,8 @@ export const getProjectApiV1ProjectsProjectIdGetResponse = zod.object({
   "description": zod.union([zod.string(),zod.null()]).optional(),
   "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(getProjectApiV1ProjectsProjectIdGetResponseStatusDefault),
   "id": zod.number(),
+  "document_path": zod.union([zod.string(),zod.null()]).optional(),
+  "document_filename": zod.union([zod.string(),zod.null()]).optional(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
 })
@@ -79,7 +83,9 @@ export const updateProjectApiV1ProjectsProjectIdPutParams = zod.object({
 export const updateProjectApiV1ProjectsProjectIdPutBody = zod.object({
   "name": zod.union([zod.string(),zod.null()]).optional(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
-  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).optional()
+  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).optional(),
+  "document_path": zod.union([zod.string(),zod.null()]).optional(),
+  "document_filename": zod.union([zod.string(),zod.null()]).optional()
 })
 
 export const updateProjectApiV1ProjectsProjectIdPutResponseStatusDefault = "draft";
@@ -89,6 +95,8 @@ export const updateProjectApiV1ProjectsProjectIdPutResponse = zod.object({
   "description": zod.union([zod.string(),zod.null()]).optional(),
   "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(updateProjectApiV1ProjectsProjectIdPutResponseStatusDefault),
   "id": zod.number(),
+  "document_path": zod.union([zod.string(),zod.null()]).optional(),
+  "document_filename": zod.union([zod.string(),zod.null()]).optional(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
 })

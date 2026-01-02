@@ -6,8 +6,8 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.core.config import settings
-
-# from app.models import Base  # if you want autogenerate, set target_metadata = Base.metadata
+from app.db.base_class import Base
+import app.models  # noqa: F401 - Import all models to register them with Base
 
 # Alembic Config
 config = context.config
@@ -16,8 +16,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Autogenerate target metadata (set to your models' Base.metadata if needed)
-target_metadata = None  # e.g., Base.metadata
+# Autogenerate target metadata
+target_metadata = Base.metadata
 
 
 def do_run_migrations(connection):

@@ -4,10 +4,13 @@ import {
   useGetProjectApiV1ProjectsProjectIdGet,
   useDeleteProjectApiV1ProjectsProjectIdDelete
 } from '@lib/api/v1/endpoints/projects'
+import {
+  useGetProjectDocumentsApiV1DocumentsProjectProjectIdGet
+} from '@lib/api/v1/endpoints/documents'
 
 const route = useRoute()
 const router = useRouter()
-const queryClient = useQueryClient()
+const toast = useToast()
 
 const projectId = computed(() => Number(route.params.id))
 
@@ -21,7 +24,38 @@ const deleteMutation = useDeleteProjectApiV1ProjectsProjectIdDelete({
   }
 })
 
-const documentInfo = ref<null | { filename: string; type: string; size: string }>(null)
+// Document management
+const documentsQuery = useGetProjectDocumentsApiV1DocumentsProjectProjectIdGet(projectId)
+const selectedDocumentId = ref<number | null>(null)
+const selectedText = ref<string>('')
+const showMarkdownViewer = ref(false)
+
+const selectedDocument = computed(() => {
+  if (!selectedDocumentId.value || !documentsQuery.data.value) return null
+  const docs = (documentsQuery.data.value as any)?.data
+  if (!Array.isArray(docs)) return null
+  
+  return docs.find((d: any) => d.id === selectedDocumentId.value)
+})
+
+const handleDocumentUploaded = (documentId: number) => {
+  selectedDocumentId.value = documentId
+  showMarkdownViewer.value = true
+  toast.add({
+    title: 'Document processed',
+    description: 'You can now view the markdown and select reference sections',
+    color: 'success'
+  })
+}
+
+const handleTextSelection = (text: string) => {
+  selectedText.value = text
+  toast.add({
+    title: 'Text selected',
+    description: `${text.length} characters selected. Ready to process.`,
+    color: 'primary'
+  })
+}
 
 const references = ref([
   { id: 'R1', title: 'Smith et al. (2020)', source: 'Journal of Medicine' },
@@ -53,13 +87,13 @@ const claimColumns = [
 <template>
   <UDashboardPanel :id="`project-${projectId}`">
     <template #header>
-      <UDashboardNavbar :title="projectQuery.data?.data?.name || 'Project'">
+      <UDashboardNavbar :title="(projectQuery.data.value as any)?.data?.name || 'Project'">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
           <div class="flex items-center gap-2">
-            <UBadge variant="subtle" color="neutral" :label="projectQuery.data?.data?.status" />
+            <UBadge variant="subtle" color="neutral" :label="(projectQuery.data.value as any)?.data?.status" />
             <UButton icon="i-lucide-upload" label="Upload Document" color="neutral" variant="outline" />
             <UButton icon="i-lucide-cog" label="Process" color="primary" />
           </div>
@@ -75,17 +109,83 @@ const claimColumns = [
             <template #header>
               <div class="flex items-center justify-between">
                 <span class="font-medium">Document</span>
-                <UButton size="xs" variant="outline" icon="i-lucide-upload" label="Upload" />
+                <div class="flex items-center gap-2">
+                  <DocumentsDocumentUpload
+                    :project-id="projectId"
+                    @uploaded="handleDocumentUploaded"
+                  />
+                  <UButton
+                    v-if="(documentsQuery.data.value as any)?.data && (documentsQuery.data.value as any).data.length > 0"
+                    size="xs"
+                    variant="outline"
+                    icon="i-lucide-eye"
+                    label="View Markdown"
+                    @click="showMarkdownViewer = !showMarkdownViewer"
+                  />
+                </div>
               </div>
             </template>
 
-            <div v-if="!documentInfo" class="text-sm text-muted">
-              No document uploaded yet. Supported: PDF, DOCX.
+            <div v-if="!(documentsQuery.data.value as any)?.data || (documentsQuery.data.value as any).data.length === 0" class="text-sm text-muted">
+              No document uploaded yet. Upload a PDF to extract references.
             </div>
-            <div v-else class="text-sm">
-              <div class="font-medium">{{ documentInfo.filename }}</div>
-              <div class="text-muted">{{ documentInfo.type }} • {{ documentInfo.size }}</div>
+            <div v-else class="space-y-2">
+              <div v-for="doc in (documentsQuery.data.value as any).data" :key="doc.id" class="text-sm">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="font-medium">{{ doc.filename }}</div>
+                    <div class="text-muted">
+                      {{ doc.document_title || 'No title' }} •
+                      {{ doc.page_count ? `${doc.page_count} pages` : 'Unknown pages' }}
+                    </div>
+                  </div>
+                  <UButton
+                    size="xs"
+                    variant="ghost"
+                    icon="i-lucide-eye"
+                    @click="selectedDocumentId = doc.id; showMarkdownViewer = true"
+                  />
+                </div>
+              </div>
             </div>
+          </UCard>
+
+          <!-- Markdown Viewer -->
+          <UCard v-if="showMarkdownViewer && selectedDocument">
+            <template #header>
+              <div class="flex items-center justify-between">
+                <span class="font-medium">Document Content (Select text to extract references)</span>
+                <UButton
+                  size="xs"
+                  variant="ghost"
+                  icon="i-lucide-x"
+                  @click="showMarkdownViewer = false"
+                />
+              </div>
+            </template>
+
+            <div class="max-h-[600px] overflow-y-auto">
+              <DocumentsMarkdownViewer
+                :markdown="selectedDocument.markdown_content"
+                :selectable="true"
+                @select="handleTextSelection"
+              />
+            </div>
+
+            <template #footer v-if="selectedText">
+              <div class="flex items-center justify-between">
+                <div class="text-sm">
+                  <span class="font-medium">Selected text:</span>
+                  <span class="text-muted ml-2">{{ selectedText.substring(0, 100) }}{{ selectedText.length > 100 ? '...' : '' }}</span>
+                </div>
+                <UButton
+                  icon="i-lucide-wand-2"
+                  label="Process with LM Studio"
+                  color="primary"
+                  @click="() => { toast.add({ title: 'Coming soon', description: 'LM Studio processing will be implemented next' }) }"
+                />
+              </div>
+            </template>
           </UCard>
 
           <!-- Reference List -->
@@ -129,15 +229,15 @@ const claimColumns = [
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-muted">Name</span>
-                <span class="font-medium">{{ projectQuery.data?.data?.name }}</span>
+                <span class="font-medium">{{ (projectQuery.data.value as any)?.data?.name }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-muted">Status</span>
-                <span class="capitalize">{{ projectQuery.data?.data?.status }}</span>
+                <span class="capitalize">{{ (projectQuery.data.value as any)?.data?.status }}</span>
               </div>
-              <div v-if="projectQuery.data?.data?.description" class="pt-2">
+              <div v-if="(projectQuery.data.value as any)?.data?.description" class="pt-2">
                 <div class="text-muted mb-1">Description</div>
-                <div>{{ projectQuery.data?.data?.description }}</div>
+                <div>{{ (projectQuery.data.value as any)?.data?.description }}</div>
               </div>
               <div class="flex gap-2 justify-end pt-3">
                 <UButton color="error" variant="subtle" :loading="deleteMutation.isPending.value" @click="deleteMutation.mutate({ projectId: projectId as number })">Delete</UButton>
