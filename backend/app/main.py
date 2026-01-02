@@ -60,6 +60,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Routers
+from app.api.v1.endpoints.projects import router as projects_router  # noqa: E402
+app.include_router(projects_router, prefix="/api/v1")
+
 
 @app.get("/health", tags=["internal"], operation_id="health_check")
 async def health_check():
