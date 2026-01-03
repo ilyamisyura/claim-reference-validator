@@ -14,12 +14,18 @@ from app.models.document import Document
 from app.models.project import Project
 from app.models.reference import Reference
 from app.schemas.docling_extraction import DoclingPDFToMarkdownResponse
-from app.schemas.extraction import TextExtractionRequest, TextExtractionResponse
+from app.schemas.extraction import (
+    TextExtractionRequest,
+    TextExtractionResponse,
+    ReferencesExtractionRequest,
+    ReferencesExtractionResponse,
+)
 from app.services.docling_service import get_docling_service
 from app.services.lm_studio_client import get_lm_studio_client, LMStudioError
 from app.services.reference_dedup import compute_dedup_hash
 from app.services.text_extraction import (
     extract_claims_and_references,
+    extract_references_only,
     validate_reference_indices,
 )
 
@@ -270,6 +276,108 @@ async def process_text(
         project_id=request.project_id,
         extraction_result=extraction_result,
         claims_created=claims_created,
+        references_created=references_created,
+        references_deduplicated=references_deduplicated
+    )
+
+
+@router.post("/references", response_model=ReferencesExtractionResponse, operation_id="extractReferences")
+async def process_references(
+    request: ReferencesExtractionRequest,
+    session: Annotated[AsyncSession, Depends(get_db)],
+):
+    """
+    Extract only references from text using LM Studio.
+
+    This endpoint:
+    1. Uses LLM to extract references from the provided text
+    2. Deduplicates references against existing database entries
+    3. Creates new reference records
+
+    Args:
+        request: References extraction request with text and project_id
+        session: Database session
+
+    Returns:
+        Extraction response with statistics
+    """
+    # Verify project exists
+    result = await session.execute(
+        select(Project).where(Project.id == request.project_id)
+    )
+    project = result.scalar_one_or_none()
+
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    # Get LM Studio client
+    try:
+        lm_client = get_lm_studio_client()
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=503,
+            detail="LM Studio service not available. Please ensure LM Studio is running."
+        ) from e
+
+    # Extract references using LLM
+    try:
+        extracted_references = await extract_references_only(
+            lm_client,
+            request.text
+        )
+    except LMStudioError as e:
+        logger.error(f"Extraction failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to extract references: {str(e)}"
+        ) from e
+
+    # Process references with deduplication
+    references_created = 0
+    references_deduplicated = 0
+    created_references = []
+
+    for extracted_ref in extracted_references:
+        # Compute dedup hash
+        dedup_hash = compute_dedup_hash(
+            title=extracted_ref.title,
+            authors=extracted_ref.authors,
+            doi=extracted_ref.doi
+        )
+
+        # Check if reference already exists
+        result = await session.execute(
+            select(Reference).where(Reference.dedup_hash == dedup_hash)
+        )
+        existing_ref = result.scalar_one_or_none()
+
+        if existing_ref:
+            # Use existing reference
+            references_deduplicated += 1
+            created_references.append(extracted_ref)
+            logger.info(f"Found existing reference: {existing_ref.title}")
+        else:
+            # Create new reference
+            new_ref = Reference(
+                title=extracted_ref.title,
+                authors=extracted_ref.authors,
+                year=extracted_ref.year,
+                source=extracted_ref.source,
+                doi=extracted_ref.doi,
+                url=extracted_ref.url,
+                dedup_hash=dedup_hash,
+            )
+            session.add(new_ref)
+            references_created += 1
+            created_references.append(extracted_ref)
+            logger.info(f"Created new reference: {new_ref.title}")
+
+    # Commit all changes
+    await session.commit()
+
+    return ReferencesExtractionResponse(
+        project_id=request.project_id,
+        references=created_references,
         references_created=references_created,
         references_deduplicated=references_deduplicated
     )

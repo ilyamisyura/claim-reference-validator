@@ -56,6 +56,117 @@ Return ONLY a valid JSON object with this exact structure:
 Be thorough but precise. Only extract clear claims and well-defined references."""
 
 
+REFERENCES_ONLY_SYSTEM_PROMPT = """You are an expert at extracting bibliographic references from scientific and academic text.
+
+Your task is to extract all bibliographic references mentioned in the text in a structured format.
+
+Extract each reference with as much information as available:
+- Title (required)
+- Authors (as a formatted string, required)
+- Year (integer, use null if not available - NOT "n.d." or "unknown")
+- Source (journal, conference, book, etc., optional)
+- DOI (if available, optional)
+- URL (if available, optional)
+
+Return ONLY a valid JSON object with this exact structure:
+{
+  "references": [
+    {
+      "title": "Reference title",
+      "authors": "Author1, Author2",
+      "year": 2023,
+      "source": "Journal Name",
+      "doi": "10.1234/example",
+      "url": "https://example.com"
+    },
+    {
+      "title": "Reference without year",
+      "authors": "Author Name",
+      "year": null,
+      "source": "Publication"
+    }
+  ]
+}
+
+Important: If year is not available, use null (not "n.d." or a string).
+Be thorough but precise. Only extract well-defined references."""
+
+
+async def extract_references_only(
+    client: LMStudioClient,
+    text: str,
+) -> list[ExtractedReference]:
+    """
+    Extract only references from text using LLM.
+
+    Args:
+        client: LM Studio client instance
+        text: Text to analyze
+
+    Returns:
+        List of extracted references
+
+    Raises:
+        LMStudioError: If extraction fails
+    """
+    messages = [
+        {"role": "system", "content": REFERENCES_ONLY_SYSTEM_PROMPT},
+        {"role": "user", "content": f"Extract all bibliographic references from the following text:\n\n{text}"}
+    ]
+
+    try:
+        # Request completion (no JSON mode as many local models don't support it)
+        response = await client.chat_completion(
+            messages=messages,
+            temperature=0.1,  # Low temperature for more consistent extraction
+            max_tokens=4000
+        )
+
+        # Parse the JSON response
+        try:
+            result_dict = json.loads(response)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse JSON response: {response}")
+            # Try to extract JSON from markdown code blocks if present
+            if "```json" in response:
+                json_start = response.find("```json") + 7
+                json_end = response.find("```", json_start)
+                result_dict = json.loads(response[json_start:json_end].strip())
+            elif "```" in response:
+                json_start = response.find("```") + 3
+                json_end = response.find("```", json_start)
+                result_dict = json.loads(response[json_start:json_end].strip())
+            else:
+                raise LMStudioError(f"Failed to parse JSON response: {e}") from e
+
+        # Clean and validate references
+        references = []
+        for ref_data in result_dict.get("references", []):
+            # Handle edge cases in year field (e.g., "n.d." -> None)
+            if isinstance(ref_data.get("year"), str):
+                year_str = ref_data["year"].lower().strip()
+                if year_str in ("n.d.", "n.d", "unknown", ""):
+                    ref_data["year"] = None
+                else:
+                    # Try to parse as int
+                    try:
+                        ref_data["year"] = int(year_str)
+                    except ValueError:
+                        ref_data["year"] = None
+
+            references.append(ExtractedReference(**ref_data))
+
+        logger.info(f"Extracted {len(references)} references")
+
+        return references
+
+    except LMStudioError:
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error during extraction: {e}")
+        raise LMStudioError(f"Extraction failed: {e}") from e
+
+
 async def extract_claims_and_references(
     client: LMStudioClient,
     text: str,
@@ -79,12 +190,11 @@ async def extract_claims_and_references(
     ]
 
     try:
-        # Request JSON response format
+        # Request completion (no JSON mode as many local models don't support it)
         response = await client.chat_completion(
             messages=messages,
             temperature=0.1,  # Low temperature for more consistent extraction
-            max_tokens=4000,
-            response_format={"type": "json_object"}
+            max_tokens=4000
         )
 
         # Parse the JSON response

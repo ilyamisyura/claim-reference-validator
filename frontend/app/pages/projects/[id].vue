@@ -7,6 +7,12 @@ import {
 import {
   useListProjectDocuments
 } from '@lib/api/v1/endpoints/documents'
+import {
+  useExtractReferences
+} from '@lib/api/v1/endpoints/process'
+import {
+  useListReferences
+} from '@lib/api/v1/endpoints/references'
 
 const route = useRoute()
 const router = useRouter()
@@ -83,11 +89,77 @@ const handleTextSelection = (text: string) => {
   })
 }
 
-const references = ref([
-  { id: 'R1', title: 'Smith et al. (2020)', source: 'Journal of Medicine' },
-  { id: 'R2', title: 'WHO Guidance 2021', source: 'World Health Organization' },
-  { id: 'R3', title: 'Miller & Zhou (2019)', source: 'Clinical Trials' }
-])
+// Fetch references
+const referencesQuery = useListReferences(
+  computed(() => ({ page: 1, page_size: 100 }))
+)
+
+// Extract references mutation
+const queryClient = useQueryClient()
+const extractionMutation = useExtractReferences({
+  mutation: {
+    onSuccess: (data) => {
+      const result = data.data as any
+      toast.add({
+        title: 'Extraction complete',
+        description: `Extracted ${result.references_created} new references (${result.references_deduplicated} duplicates found)`,
+        color: 'success'
+      })
+      // Invalidate references query to show new references
+      queryClient.invalidateQueries({ queryKey: ['api', 'v1', 'references'] })
+    },
+    onError: (error: any) => {
+      toast.add({
+        title: 'Extraction failed',
+        description: error.response?.data?.detail || 'Failed to extract references',
+        color: 'error'
+      })
+    }
+  }
+})
+
+const handleExtractReferences = async () => {
+  const docs = (documentsQuery.data.value as any)?.data
+  if (!docs || docs.length === 0) {
+    toast.add({
+      title: 'No document',
+      description: 'Please upload a document first',
+      color: 'error'
+    })
+    return
+  }
+
+  const document = docs[0]
+  const markdown = document.markdown_content
+
+  if (!markdown) {
+    toast.add({
+      title: 'No content',
+      description: 'Document has no markdown content',
+      color: 'error'
+    })
+    return
+  }
+
+  toast.add({
+    title: 'Extracting references...',
+    description: 'Processing text with LM Studio. This may take a while for longer documents...',
+    color: 'neutral'
+  })
+
+  extractionMutation.mutate({
+    data: {
+      text: markdown,
+      project_id: projectId.value
+    }
+  })
+}
+
+// Computed references from query
+const references = computed(() => {
+  const data = referencesQuery.data.value as any
+  return data?.data?.data || []
+})
 
 const claims = ref([
   { id: 101, text: 'The drug reduces blood pressure by 15%.', referenceId: 'R1' },
@@ -95,8 +167,10 @@ const claims = ref([
 ])
 
 const refColumns = [
-  { accessorKey: 'id', header: 'Ref ID' },
+  { accessorKey: 'id', header: 'ID' },
   { accessorKey: 'title', header: 'Title' },
+  { accessorKey: 'authors', header: 'Authors' },
+  { accessorKey: 'year', header: 'Year' },
   { accessorKey: 'source', header: 'Source' }
 ]
 
@@ -167,13 +241,23 @@ const claimColumns = [
                     Uploaded {{ new Date((documentsQuery.data.value as any).data[0].created_at).toLocaleDateString() }}
                   </div>
                 </div>
-                <UButton
-                  size="xs"
-                  variant="ghost"
-                  icon="i-lucide-eye"
-                  label="View"
-                  @click="selectedDocumentId = (documentsQuery.data.value as any).data[0].id; showMarkdownViewer = true"
-                />
+                <div class="flex gap-2">
+                  <UButton
+                    size="xs"
+                    variant="ghost"
+                    icon="i-lucide-eye"
+                    label="View"
+                    @click="selectedDocumentId = (documentsQuery.data.value as any).data[0].id; showMarkdownViewer = true"
+                  />
+                  <UButton
+                    size="xs"
+                    variant="outline"
+                    icon="i-lucide-sparkles"
+                    label="Extract References"
+                    :loading="extractionMutation.isPending.value"
+                    @click="handleExtractReferences"
+                  />
+                </div>
               </div>
 
               <!-- Replace Document Button -->
@@ -234,13 +318,22 @@ const claimColumns = [
               <div class="flex items-center justify-between">
                 <span class="font-medium">Reference List</span>
                 <div class="flex items-center gap-2">
+                  <UBadge v-if="references.length > 0" color="primary" variant="subtle">
+                    {{ references.length }} references
+                  </UBadge>
                   <UButton size="xs" variant="outline" icon="i-lucide-quote" label="Paste References" />
                   <UButton size="xs" icon="i-lucide-plus" label="Add Reference" />
                 </div>
               </div>
             </template>
 
-            <UTable :data="references" :columns="refColumns" />
+            <div v-if="referencesQuery.isLoading.value" class="text-sm text-muted p-4">
+              Loading references...
+            </div>
+            <div v-else-if="references.length === 0" class="text-sm text-muted p-4">
+              No references yet. Click "Extract References" to automatically extract them from the document.
+            </div>
+            <UTable v-else :data="references" :columns="refColumns" />
           </UCard>
 
           <!-- Claims -->

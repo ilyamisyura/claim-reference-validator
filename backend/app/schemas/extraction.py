@@ -49,3 +49,19 @@ class TextExtractionResponse(BaseModel):
     claims_created: int
     references_created: int
     references_deduplicated: int
+
+
+class ReferencesExtractionRequest(BaseModel):
+    """Schema for references-only extraction request."""
+
+    text: str = Field(..., description="Text to extract references from")
+    project_id: int = Field(..., description="Project ID to associate the extracted references with")
+
+
+class ReferencesExtractionResponse(BaseModel):
+    """Schema for references-only extraction response."""
+
+    project_id: int
+    references: list[ExtractedReference]
+    references_created: int
+    references_deduplicated: int

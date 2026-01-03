@@ -81,6 +81,8 @@ export * from './referenceUpdateSource';
 export * from './referenceUpdateTitle';
 export * from './referenceUpdateUrl';
 export * from './referenceUpdateYear';
+export * from './referencesExtractionRequest';
+export * from './referencesExtractionResponse';
 export * from './textExtractionRequest';
 export * from './textExtractionResponse';
 export * from './validationError';

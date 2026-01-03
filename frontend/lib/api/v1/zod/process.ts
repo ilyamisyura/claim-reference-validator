@@ -88,3 +88,38 @@ export const extractClaimsAndReferencesResponse = zod.object({
   "references_deduplicated": zod.number()
 }).describe('Schema for text extraction response.')
 
+/**
+ * Extract only references from text using LM Studio.
+
+This endpoint:
+1. Uses LLM to extract references from the provided text
+2. Deduplicates references against existing database entries
+3. Creates new reference records
+
+Args:
+    request: References extraction request with text and project_id
+    session: Database session
+
+Returns:
+    Extraction response with statistics
+ * @summary Process References
+ */
+export const extractReferencesBody = zod.object({
+  "text": zod.string().describe('Text to extract references from'),
+  "project_id": zod.number().describe('Project ID to associate the extracted references with')
+}).describe('Schema for references-only extraction request.')
+
+export const extractReferencesResponse = zod.object({
+  "project_id": zod.number(),
+  "references": zod.array(zod.object({
+  "title": zod.string().describe('Title of the reference'),
+  "authors": zod.string().describe('Authors of the reference (comma-separated or formatted)'),
+  "year": zod.union([zod.number(),zod.null()]).optional().describe('Publication year'),
+  "source": zod.union([zod.string(),zod.null()]).optional().describe('Source (journal, conference, book, etc.)'),
+  "doi": zod.union([zod.string(),zod.null()]).optional().describe('DOI if available'),
+  "url": zod.union([zod.string(),zod.null()]).optional().describe('URL if available')
+}).describe('Schema for an extracted reference from text.')),
+  "references_created": zod.number(),
+  "references_deduplicated": zod.number()
+}).describe('Schema for references-only extraction response.')
+

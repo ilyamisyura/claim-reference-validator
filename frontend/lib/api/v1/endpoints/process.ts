@@ -33,6 +33,8 @@ import type {
   DoclingPDFToMarkdownResponse,
   HTTPValidationError,
   ProcessPdfParams,
+  ReferencesExtractionRequest,
+  ReferencesExtractionResponse,
   TextExtractionRequest,
   TextExtractionResponse
 } from '../models';
@@ -195,6 +197,80 @@ export const useExtractClaimsAndReferences = <TError = AxiosError<HTTPValidation
       > => {
 
       const mutationOptions = getExtractClaimsAndReferencesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
+ * Extract only references from text using LM Studio.
+
+This endpoint:
+1. Uses LLM to extract references from the provided text
+2. Deduplicates references against existing database entries
+3. Creates new reference records
+
+Args:
+    request: References extraction request with text and project_id
+    session: Database session
+
+Returns:
+    Extraction response with statistics
+ * @summary Process References
+ */
+export const extractReferences = (
+    referencesExtractionRequest: MaybeRef<ReferencesExtractionRequest>, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ReferencesExtractionResponse>> => {
+    referencesExtractionRequest = unref(referencesExtractionRequest);
+    
+    return axios.default.post(
+      `/api/v1/process/references`,
+      referencesExtractionRequest,options
+    );
+  }
+
+
+
+export const getExtractReferencesMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractReferences>>, TError,{data: ReferencesExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof extractReferences>>, TError,{data: ReferencesExtractionRequest}, TContext> => {
+
+const mutationKey = ['extractReferences'];
+const {mutation: mutationOptions, axios: axiosOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, axios: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof extractReferences>>, {data: ReferencesExtractionRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  extractReferences(data,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ExtractReferencesMutationResult = NonNullable<Awaited<ReturnType<typeof extractReferences>>>
+    export type ExtractReferencesMutationBody = ReferencesExtractionRequest
+    export type ExtractReferencesMutationError = AxiosError<HTTPValidationError>
+
+    /**
+ * @summary Process References
+ */
+export const useExtractReferences = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractReferences>>, TError,{data: ReferencesExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof extractReferences>>,
+        TError,
+        {data: ReferencesExtractionRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getExtractReferencesMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
