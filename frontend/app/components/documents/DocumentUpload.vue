@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import axios from 'axios'
+import { useListProjectDocuments } from '@lib/api/v1/endpoints/documents'
 
 const props = defineProps<{
   projectId: number
@@ -8,6 +9,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   uploaded: [documentId: number]
+  confirmReplace: [file: File]
 }>()
 
 const queryClient = useQueryClient()
@@ -17,6 +19,11 @@ const toast = useToast()
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const fileInputRef = ref<HTMLInputElement | null>(null)
+
+// Query to check for existing documents
+const documentsQuery = useListProjectDocuments(
+  computed(() => props.projectId)
+)
 
 const triggerFileInput = () => {
   fileInputRef.value?.click()
@@ -37,6 +44,36 @@ const handleFileUpload = async (event: Event) => {
     return
   }
 
+  // Wait for query to load if it's still loading
+  if (documentsQuery.isLoading.value) {
+    toast.add({
+      title: 'Loading...',
+      description: 'Please wait while we check for existing documents',
+      color: 'neutral'
+    })
+    return
+  }
+
+  // Check if documents already exist
+  // Only check if query has successfully loaded
+  if (documentsQuery.isSuccess.value) {
+    const responseData = documentsQuery.data.value as any
+    const existingDocs = responseData?.data
+
+    if (Array.isArray(existingDocs) && existingDocs.length > 0) {
+      // Emit event for parent to handle confirmation
+      emit('confirmReplace', file)
+      target.value = '' // Clear input
+      return
+    }
+  }
+
+  // No existing documents, proceed with upload
+  await performUpload(file)
+  target.value = ''
+}
+
+const performUpload = async (file: File) => {
   uploading.value = true
   uploadProgress.value = 0
 
@@ -70,7 +107,7 @@ const handleFileUpload = async (event: Event) => {
 
     emit('uploaded', response.data.document_id)
 
-    // Invalidate project documents query to refetch
+    // Invalidate queries to refetch
     queryClient.invalidateQueries({ queryKey: ['project', props.projectId, 'documents'] })
   } catch (error: any) {
     console.error('Upload error:', error)
@@ -82,9 +119,13 @@ const handleFileUpload = async (event: Event) => {
   } finally {
     uploading.value = false
     uploadProgress.value = 0
-    target.value = ''
   }
 }
+
+// Expose performUpload so parent can call it after confirmation
+defineExpose({
+  performUpload
+})
 </script>
 
 <template>

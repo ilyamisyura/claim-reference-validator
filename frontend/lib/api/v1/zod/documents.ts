@@ -19,11 +19,11 @@ Returns:
     Document with markdown content
  * @summary Get Document
  */
-export const getDocumentApiV1DocumentsDocumentIdGetParams = zod.object({
+export const getDocumentParams = zod.object({
   "document_id": zod.number()
 })
 
-export const getDocumentApiV1DocumentsDocumentIdGetResponse = zod.object({
+export const getDocumentResponse = zod.object({
   "filename": zod.string(),
   "document_title": zod.union([zod.string(),zod.null()]).optional(),
   "markdown_content": zod.string(),
@@ -45,11 +45,11 @@ Returns:
     Success message
  * @summary Delete Document
  */
-export const deleteDocumentApiV1DocumentsDocumentIdDeleteParams = zod.object({
+export const deleteDocumentParams = zod.object({
   "document_id": zod.number()
 })
 
-export const deleteDocumentApiV1DocumentsDocumentIdDeleteResponse = zod.unknown()
+export const deleteDocumentResponse = zod.unknown()
 
 /**
  * Retrieve all documents for a project.
@@ -62,11 +62,11 @@ Returns:
     List of documents for the project
  * @summary Get Project Documents
  */
-export const getProjectDocumentsApiV1DocumentsProjectProjectIdGetParams = zod.object({
+export const listProjectDocumentsParams = zod.object({
   "project_id": zod.number()
 })
 
-export const getProjectDocumentsApiV1DocumentsProjectProjectIdGetResponseItem = zod.object({
+export const listProjectDocumentsResponseItem = zod.object({
   "filename": zod.string(),
   "document_title": zod.union([zod.string(),zod.null()]).optional(),
   "markdown_content": zod.string(),
@@ -76,5 +76,5 @@ export const getProjectDocumentsApiV1DocumentsProjectProjectIdGetResponseItem = 
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
 })
-export const getProjectDocumentsApiV1DocumentsProjectProjectIdGetResponse = zod.array(getProjectDocumentsApiV1DocumentsProjectProjectIdGetResponseItem)
+export const listProjectDocumentsResponse = zod.array(listProjectDocumentsResponseItem)
 

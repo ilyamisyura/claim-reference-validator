@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ListReferencesApiV1ReferencesGetParams = {
+export type ListReferencesParams = {
 /**
  * Page number (1-indexed)
  * @minimum 1

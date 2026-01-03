@@ -37,7 +37,7 @@ import type {
 
 import type {
   HTTPValidationError,
-  ListProjectsApiV1ProjectsGetParams,
+  ListProjectsParams,
   PaginatedResponseProjectOut,
   ProjectCreate,
   ProjectOut,
@@ -52,8 +52,8 @@ import type {
 /**
  * @summary List Projects
  */
-export const listProjectsApiV1ProjectsGet = (
-    params?: MaybeRef<ListProjectsApiV1ProjectsGetParams>, options?: AxiosRequestConfig
+export const listProjects = (
+    params?: MaybeRef<ListProjectsParams>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<PaginatedResponseProjectOut>> => {
     params = unref(params);
     
@@ -67,45 +67,45 @@ export const listProjectsApiV1ProjectsGet = (
 
 
 
-export const getListProjectsApiV1ProjectsGetQueryKey = (params?: MaybeRef<ListProjectsApiV1ProjectsGetParams>,) => {
+export const getListProjectsQueryKey = (params?: MaybeRef<ListProjectsParams>,) => {
     return [
     'api','v1','projects', ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getListProjectsApiV1ProjectsGetQueryOptions = <TData = Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListProjectsApiV1ProjectsGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getListProjectsQueryOptions = <TData = Awaited<ReturnType<typeof listProjects>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListProjectsParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getListProjectsApiV1ProjectsGetQueryKey(params);
+  const queryKey =  getListProjectsQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>> = ({ signal }) => listProjectsApiV1ProjectsGet(params, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjects>>> = ({ signal }) => listProjects(params, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>, TError, TData> 
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData> 
 }
 
-export type ListProjectsApiV1ProjectsGetQueryResult = NonNullable<Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>>
-export type ListProjectsApiV1ProjectsGetQueryError = AxiosError<HTTPValidationError>
+export type ListProjectsQueryResult = NonNullable<Awaited<ReturnType<typeof listProjects>>>
+export type ListProjectsQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary List Projects
  */
 
-export function useListProjectsApiV1ProjectsGet<TData = Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>, TError = AxiosError<HTTPValidationError>>(
- params?: MaybeRef<ListProjectsApiV1ProjectsGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjectsApiV1ProjectsGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useListProjects<TData = Awaited<ReturnType<typeof listProjects>>, TError = AxiosError<HTTPValidationError>>(
+ params?: MaybeRef<ListProjectsParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getListProjectsApiV1ProjectsGetQueryOptions(params,options)
+  const queryOptions = getListProjectsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -120,7 +120,7 @@ export function useListProjectsApiV1ProjectsGet<TData = Awaited<ReturnType<typeo
 /**
  * @summary Create Project
  */
-export const createProjectApiV1ProjectsPost = (
+export const createProject = (
     projectCreate: MaybeRef<ProjectCreate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ProjectOut>> => {
     projectCreate = unref(projectCreate);
@@ -133,11 +133,11 @@ export const createProjectApiV1ProjectsPost = (
 
 
 
-export const getCreateProjectApiV1ProjectsPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>, TError,{data: ProjectCreate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>, TError,{data: ProjectCreate}, TContext> => {
+export const getCreateProjectMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProject>>, TError,{data: ProjectCreate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof createProject>>, TError,{data: ProjectCreate}, TContext> => {
 
-const mutationKey = ['createProjectApiV1ProjectsPost'];
+const mutationKey = ['createProject'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -147,10 +147,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>, {data: ProjectCreate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProject>>, {data: ProjectCreate}> = (props) => {
           const {data} = props ?? {};
 
-          return  createProjectApiV1ProjectsPost(data,axiosOptions)
+          return  createProject(data,axiosOptions)
         }
 
         
@@ -158,30 +158,30 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateProjectApiV1ProjectsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>>
-    export type CreateProjectApiV1ProjectsPostMutationBody = ProjectCreate
-    export type CreateProjectApiV1ProjectsPostMutationError = AxiosError<HTTPValidationError>
+    export type CreateProjectMutationResult = NonNullable<Awaited<ReturnType<typeof createProject>>>
+    export type CreateProjectMutationBody = ProjectCreate
+    export type CreateProjectMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Create Project
  */
-export const useCreateProjectApiV1ProjectsPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>, TError,{data: ProjectCreate}, TContext>, axios?: AxiosRequestConfig}
+export const useCreateProject = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProject>>, TError,{data: ProjectCreate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof createProjectApiV1ProjectsPost>>,
+        Awaited<ReturnType<typeof createProject>>,
         TError,
         {data: ProjectCreate},
         TContext
       > => {
 
-      const mutationOptions = getCreateProjectApiV1ProjectsPostMutationOptions(options);
+      const mutationOptions = getCreateProjectMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
     /**
  * @summary Get Project
  */
-export const getProjectApiV1ProjectsProjectIdGet = (
+export const getProject = (
     projectId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ProjectOut>> => {
     projectId = unref(projectId);
@@ -194,45 +194,45 @@ export const getProjectApiV1ProjectsProjectIdGet = (
 
 
 
-export const getGetProjectApiV1ProjectsProjectIdGetQueryKey = (projectId?: MaybeRef<number>,) => {
+export const getGetProjectQueryKey = (projectId?: MaybeRef<number>,) => {
     return [
     'api','v1','projects',projectId
     ] as const;
     }
 
     
-export const getGetProjectApiV1ProjectsProjectIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>, TError = AxiosError<HTTPValidationError>>(projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetProjectQueryOptions = <TData = Awaited<ReturnType<typeof getProject>>, TError = AxiosError<HTTPValidationError>>(projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProject>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getGetProjectApiV1ProjectsProjectIdGetQueryKey(projectId);
+  const queryKey =  getGetProjectQueryKey(projectId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>> = ({ signal }) => getProjectApiV1ProjectsProjectIdGet(projectId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProject>>> = ({ signal }) => getProject(projectId, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(projectId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>, TError, TData> 
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(projectId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProject>>, TError, TData> 
 }
 
-export type GetProjectApiV1ProjectsProjectIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>>
-export type GetProjectApiV1ProjectsProjectIdGetQueryError = AxiosError<HTTPValidationError>
+export type GetProjectQueryResult = NonNullable<Awaited<ReturnType<typeof getProject>>>
+export type GetProjectQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary Get Project
  */
 
-export function useGetProjectApiV1ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>, TError = AxiosError<HTTPValidationError>>(
- projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectApiV1ProjectsProjectIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetProject<TData = Awaited<ReturnType<typeof getProject>>, TError = AxiosError<HTTPValidationError>>(
+ projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProject>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getGetProjectApiV1ProjectsProjectIdGetQueryOptions(projectId,options)
+  const queryOptions = getGetProjectQueryOptions(projectId,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -247,7 +247,7 @@ export function useGetProjectApiV1ProjectsProjectIdGet<TData = Awaited<ReturnTyp
 /**
  * @summary Update Project
  */
-export const updateProjectApiV1ProjectsProjectIdPut = (
+export const updateProject = (
     projectId: MaybeRef<number>,
     projectUpdate: MaybeRef<ProjectUpdate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ProjectOut>> => {
@@ -262,11 +262,11 @@ projectUpdate = unref(projectUpdate);
 
 
 
-export const getUpdateProjectApiV1ProjectsProjectIdPutMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>, TError,{projectId: number;data: ProjectUpdate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>, TError,{projectId: number;data: ProjectUpdate}, TContext> => {
+export const getUpdateProjectMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProject>>, TError,{projectId: number;data: ProjectUpdate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProject>>, TError,{projectId: number;data: ProjectUpdate}, TContext> => {
 
-const mutationKey = ['updateProjectApiV1ProjectsProjectIdPut'];
+const mutationKey = ['updateProject'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -276,10 +276,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>, {projectId: number;data: ProjectUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProject>>, {projectId: number;data: ProjectUpdate}> = (props) => {
           const {projectId,data} = props ?? {};
 
-          return  updateProjectApiV1ProjectsProjectIdPut(projectId,data,axiosOptions)
+          return  updateProject(projectId,data,axiosOptions)
         }
 
         
@@ -287,30 +287,30 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UpdateProjectApiV1ProjectsProjectIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>>
-    export type UpdateProjectApiV1ProjectsProjectIdPutMutationBody = ProjectUpdate
-    export type UpdateProjectApiV1ProjectsProjectIdPutMutationError = AxiosError<HTTPValidationError>
+    export type UpdateProjectMutationResult = NonNullable<Awaited<ReturnType<typeof updateProject>>>
+    export type UpdateProjectMutationBody = ProjectUpdate
+    export type UpdateProjectMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Update Project
  */
-export const useUpdateProjectApiV1ProjectsProjectIdPut = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>, TError,{projectId: number;data: ProjectUpdate}, TContext>, axios?: AxiosRequestConfig}
+export const useUpdateProject = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProject>>, TError,{projectId: number;data: ProjectUpdate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof updateProjectApiV1ProjectsProjectIdPut>>,
+        Awaited<ReturnType<typeof updateProject>>,
         TError,
         {projectId: number;data: ProjectUpdate},
         TContext
       > => {
 
-      const mutationOptions = getUpdateProjectApiV1ProjectsProjectIdPutMutationOptions(options);
+      const mutationOptions = getUpdateProjectMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
     /**
  * @summary Delete Project
  */
-export const deleteProjectApiV1ProjectsProjectIdDelete = (
+export const deleteProject = (
     projectId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<void>> => {
     projectId = unref(projectId);
@@ -322,11 +322,11 @@ export const deleteProjectApiV1ProjectsProjectIdDelete = (
 
 
 
-export const getDeleteProjectApiV1ProjectsProjectIdDeleteMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>, TError,{projectId: number}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>, TError,{projectId: number}, TContext> => {
+export const getDeleteProjectMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProject>>, TError,{projectId: number}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteProject>>, TError,{projectId: number}, TContext> => {
 
-const mutationKey = ['deleteProjectApiV1ProjectsProjectIdDelete'];
+const mutationKey = ['deleteProject'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -336,10 +336,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>, {projectId: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProject>>, {projectId: number}> = (props) => {
           const {projectId} = props ?? {};
 
-          return  deleteProjectApiV1ProjectsProjectIdDelete(projectId,axiosOptions)
+          return  deleteProject(projectId,axiosOptions)
         }
 
         
@@ -347,23 +347,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteProjectApiV1ProjectsProjectIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>>
+    export type DeleteProjectMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProject>>>
     
-    export type DeleteProjectApiV1ProjectsProjectIdDeleteMutationError = AxiosError<HTTPValidationError>
+    export type DeleteProjectMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Delete Project
  */
-export const useDeleteProjectApiV1ProjectsProjectIdDelete = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>, TError,{projectId: number}, TContext>, axios?: AxiosRequestConfig}
+export const useDeleteProject = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProject>>, TError,{projectId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof deleteProjectApiV1ProjectsProjectIdDelete>>,
+        Awaited<ReturnType<typeof deleteProject>>,
         TError,
         {projectId: number},
         TContext
       > => {
 
-      const mutationOptions = getDeleteProjectApiV1ProjectsProjectIdDeleteMutationOptions(options);
+      const mutationOptions = getDeleteProjectMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

@@ -14,7 +14,7 @@ from app.services.reference_dedup import compute_dedup_hash, should_merge_refere
 router = APIRouter(prefix="/references", tags=["references"])
 
 
-@router.get("/", operation_id="listReferences", response_model=PaginatedResponse[ReferenceOut])
+@router.get("/", response_model=PaginatedResponse[ReferenceOut])
 async def list_references(
     page: int = Query(1, ge=1, description="Page number (1-indexed)"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
@@ -49,7 +49,7 @@ async def list_references(
     )
 
 
-@router.post("/", operation_id="createReference", response_model=ReferenceOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=ReferenceOut, status_code=status.HTTP_201_CREATED)
 async def create_reference(
     payload: ReferenceCreate, db: AsyncSession = Depends(get_db)
 ):
@@ -93,7 +93,7 @@ async def create_reference(
     return reference
 
 
-@router.get("/{reference_id}", operation_id="getReference", response_model=ReferenceOut)
+@router.get("/{reference_id}", response_model=ReferenceOut)
 async def get_reference(reference_id: int, db: AsyncSession = Depends(get_db)):
     """Get a specific reference by ID."""
     reference = await db.get(Reference, reference_id)
@@ -102,7 +102,7 @@ async def get_reference(reference_id: int, db: AsyncSession = Depends(get_db)):
     return reference
 
 
-@router.put("/{reference_id}", operation_id="updateReference", response_model=ReferenceOut)
+@router.put("/{reference_id}", response_model=ReferenceOut)
 async def update_reference(
     reference_id: int,
     payload: ReferenceUpdate,
@@ -132,7 +132,7 @@ async def update_reference(
     return reference
 
 
-@router.delete("/{reference_id}", operation_id="deleteReference", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{reference_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_reference(reference_id: int, db: AsyncSession = Depends(get_db)):
     """Delete a reference."""
     reference = await db.get(Reference, reference_id)
@@ -144,7 +144,7 @@ async def delete_reference(reference_id: int, db: AsyncSession = Depends(get_db)
     return None
 
 
-@router.post("/bulk", operation_id="bulkCreateReferences", response_model=List[ReferenceOut])
+@router.post("/bulk", response_model=List[ReferenceOut])
 async def bulk_create_references(
     payload: List[ReferenceCreate], db: AsyncSession = Depends(get_db)
 ):

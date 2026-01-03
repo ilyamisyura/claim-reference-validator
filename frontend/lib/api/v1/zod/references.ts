@@ -12,19 +12,19 @@ import * as zod from 'zod';
  * List all references with pagination.
  * @summary List References
  */
-export const listReferencesApiV1ReferencesGetQueryPageDefault = 1;
+export const listReferencesQueryPageDefault = 1;
 
-export const listReferencesApiV1ReferencesGetQueryPageSizeDefault = 20;
-export const listReferencesApiV1ReferencesGetQueryPageSizeMax = 100;
+export const listReferencesQueryPageSizeDefault = 20;
+export const listReferencesQueryPageSizeMax = 100;
 
 
 
-export const listReferencesApiV1ReferencesGetQueryParams = zod.object({
-  "page": zod.number().min(1).default(listReferencesApiV1ReferencesGetQueryPageDefault).describe('Page number (1-indexed)'),
-  "page_size": zod.number().min(1).max(listReferencesApiV1ReferencesGetQueryPageSizeMax).default(listReferencesApiV1ReferencesGetQueryPageSizeDefault).describe('Items per page')
+export const listReferencesQueryParams = zod.object({
+  "page": zod.number().min(1).default(listReferencesQueryPageDefault).describe('Page number (1-indexed)'),
+  "page_size": zod.number().min(1).max(listReferencesQueryPageSizeMax).default(listReferencesQueryPageSizeDefault).describe('Items per page')
 })
 
-export const listReferencesApiV1ReferencesGetResponse = zod.object({
+export const listReferencesResponse = zod.object({
   "data": zod.array(zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
@@ -54,7 +54,7 @@ Deduplication strategy:
 4. Otherwise, create new reference
  * @summary Create Reference
  */
-export const createReferenceApiV1ReferencesPostBody = zod.object({
+export const createReferenceBody = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
   "authors": zod.string(),
@@ -67,11 +67,11 @@ export const createReferenceApiV1ReferencesPostBody = zod.object({
  * Get a specific reference by ID.
  * @summary Get Reference
  */
-export const getReferenceApiV1ReferencesReferenceIdGetParams = zod.object({
+export const getReferenceParams = zod.object({
   "reference_id": zod.number()
 })
 
-export const getReferenceApiV1ReferencesReferenceIdGetResponse = zod.object({
+export const getReferenceResponse = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
   "authors": zod.string(),
@@ -89,11 +89,11 @@ export const getReferenceApiV1ReferencesReferenceIdGetResponse = zod.object({
  * Update a reference.
  * @summary Update Reference
  */
-export const updateReferenceApiV1ReferencesReferenceIdPutParams = zod.object({
+export const updateReferenceParams = zod.object({
   "reference_id": zod.number()
 })
 
-export const updateReferenceApiV1ReferencesReferenceIdPutBody = zod.object({
+export const updateReferenceBody = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.union([zod.string(),zod.null()]).optional(),
   "authors": zod.union([zod.string(),zod.null()]).optional(),
@@ -103,7 +103,7 @@ export const updateReferenceApiV1ReferencesReferenceIdPutBody = zod.object({
   "is_processed": zod.union([zod.boolean(),zod.null()]).optional()
 }).describe('Schema for updating a reference')
 
-export const updateReferenceApiV1ReferencesReferenceIdPutResponse = zod.object({
+export const updateReferenceResponse = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
   "authors": zod.string(),
@@ -121,7 +121,7 @@ export const updateReferenceApiV1ReferencesReferenceIdPutResponse = zod.object({
  * Delete a reference.
  * @summary Delete Reference
  */
-export const deleteReferenceApiV1ReferencesReferenceIdDeleteParams = zod.object({
+export const deleteReferenceParams = zod.object({
   "reference_id": zod.number()
 })
 
@@ -131,7 +131,7 @@ export const deleteReferenceApiV1ReferencesReferenceIdDeleteParams = zod.object(
 Returns list of reference IDs (existing or newly created).
  * @summary Bulk Create References
  */
-export const bulkCreateReferencesApiV1ReferencesBulkPostBodyItem = zod.object({
+export const bulkCreateReferencesBodyItem = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
   "authors": zod.string(),
@@ -139,9 +139,9 @@ export const bulkCreateReferencesApiV1ReferencesBulkPostBodyItem = zod.object({
   "year": zod.union([zod.number(),zod.null()]).optional(),
   "url": zod.union([zod.string(),zod.null()]).optional()
 }).describe('Schema for creating a reference')
-export const bulkCreateReferencesApiV1ReferencesBulkPostBody = zod.array(bulkCreateReferencesApiV1ReferencesBulkPostBodyItem)
+export const bulkCreateReferencesBody = zod.array(bulkCreateReferencesBodyItem)
 
-export const bulkCreateReferencesApiV1ReferencesBulkPostResponseItem = zod.object({
+export const bulkCreateReferencesResponseItem = zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
   "authors": zod.string(),
@@ -154,5 +154,5 @@ export const bulkCreateReferencesApiV1ReferencesBulkPostResponseItem = zod.objec
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
 }).describe('Schema for reference output')
-export const bulkCreateReferencesApiV1ReferencesBulkPostResponse = zod.array(bulkCreateReferencesApiV1ReferencesBulkPostResponseItem)
+export const bulkCreateReferencesResponse = zod.array(bulkCreateReferencesResponseItem)
 

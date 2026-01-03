@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './bodyProcessPdfApiV1ProcessPdfPost';
+export * from './bodyProcessPdf';
 export * from './claimCreate';
 export * from './claimCreateClaimType';
 export * from './claimCreatePageNumber';
@@ -41,14 +41,14 @@ export * from './extractedReferenceUrl';
 export * from './extractedReferenceYear';
 export * from './extractionResult';
 export * from './hTTPValidationError';
-export * from './linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams';
-export * from './listClaimsApiV1ClaimsGetParams';
-export * from './listProjectsApiV1ProjectsGetParams';
-export * from './listReferencesApiV1ReferencesGetParams';
+export * from './linkClaimToReferenceParams';
+export * from './listClaimsParams';
+export * from './listProjectsParams';
+export * from './listReferencesParams';
 export * from './paginatedResponseClaimOut';
 export * from './paginatedResponseProjectOut';
 export * from './paginatedResponseReferenceOut';
-export * from './processPdfApiV1ProcessPdfPostParams';
+export * from './processPdfParams';
 export * from './projectCreate';
 export * from './projectCreateDescription';
 export * from './projectCreateStatus';

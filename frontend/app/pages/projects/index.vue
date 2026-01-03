@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import {
-  useListProjectsApiV1ProjectsGet,
-  useDeleteProjectApiV1ProjectsProjectIdDelete
+  useListProjects,
+  useDeleteProject
 } from '@lib/api/v1/endpoints/projects'
 
 const queryClient = useQueryClient()
@@ -10,14 +10,14 @@ const queryClient = useQueryClient()
 const page = ref(1)
 const pageSize = ref(20)
 
-const list = useListProjectsApiV1ProjectsGet(
+const list = useListProjects(
   computed(() => ({ page: page.value, pageSize: pageSize.value }))
 )
 const rows = computed(() => list.data.value?.data?.data ?? [])
 const total = computed(() => list.data.value?.data?.total ?? 0)
 const totalPages = computed(() => list.data.value?.data?.total_pages ?? 1)
 
-const deleteMutation = useDeleteProjectApiV1ProjectsProjectIdDelete({
+const deleteMutation = useDeleteProject({
   mutation: {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: list.queryKey })

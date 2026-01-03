@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import {
-  useGetProjectApiV1ProjectsProjectIdGet,
-  useDeleteProjectApiV1ProjectsProjectIdDelete
+  useGetProject,
+  useDeleteProject
 } from '@lib/api/v1/endpoints/projects'
 import {
-  useGetProjectDocumentsApiV1DocumentsProjectProjectIdGet
+  useListProjectDocuments
 } from '@lib/api/v1/endpoints/documents'
 
 const route = useRoute()
@@ -14,9 +14,9 @@ const toast = useToast()
 
 const projectId = computed(() => Number(route.params.id))
 
-const projectQuery = useGetProjectApiV1ProjectsProjectIdGet(projectId)
+const projectQuery = useGetProject(projectId)
 
-const deleteMutation = useDeleteProjectApiV1ProjectsProjectIdDelete({
+const deleteMutation = useDeleteProject({
   mutation: {
     onSuccess: async () => {
       await router.push('/projects')
@@ -25,16 +25,19 @@ const deleteMutation = useDeleteProjectApiV1ProjectsProjectIdDelete({
 })
 
 // Document management
-const documentsQuery = useGetProjectDocumentsApiV1DocumentsProjectProjectIdGet(projectId)
+const documentsQuery = useListProjectDocuments(projectId)
 const selectedDocumentId = ref<number | null>(null)
 const selectedText = ref<string>('')
 const showMarkdownViewer = ref(false)
+const showReplaceConfirmation = ref(false)
+const pendingFile = ref<File | null>(null)
+const uploadComponentRef = ref<any>(null)
 
 const selectedDocument = computed(() => {
   if (!selectedDocumentId.value || !documentsQuery.data.value) return null
   const docs = (documentsQuery.data.value as any)?.data
   if (!Array.isArray(docs)) return null
-  
+
   return docs.find((d: any) => d.id === selectedDocumentId.value)
 })
 
@@ -45,6 +48,29 @@ const handleDocumentUploaded = (documentId: number) => {
     title: 'Document processed',
     description: 'You can now view the markdown and select reference sections',
     color: 'success'
+  })
+}
+
+const handleConfirmReplace = (file: File) => {
+  pendingFile.value = file
+  showReplaceConfirmation.value = true
+}
+
+const handleConfirmReplaceAccept = async () => {
+  showReplaceConfirmation.value = false
+  if (pendingFile.value && uploadComponentRef.value) {
+    await uploadComponentRef.value.performUpload(pendingFile.value)
+    pendingFile.value = null
+  }
+}
+
+const handleConfirmReplaceCancel = () => {
+  showReplaceConfirmation.value = false
+  pendingFile.value = null
+  toast.add({
+    title: 'Upload cancelled',
+    description: 'No changes were made',
+    color: 'neutral'
   })
 }
 
@@ -109,43 +135,57 @@ const claimColumns = [
             <template #header>
               <div class="flex items-center justify-between">
                 <span class="font-medium">Document</span>
-                <div class="flex items-center gap-2">
-                  <DocumentsDocumentUpload
-                    :project-id="projectId"
-                    @uploaded="handleDocumentUploaded"
-                  />
-                  <UButton
-                    v-if="(documentsQuery.data.value as any)?.data && (documentsQuery.data.value as any).data.length > 0"
-                    size="xs"
-                    variant="outline"
-                    icon="i-lucide-eye"
-                    label="View Markdown"
-                    @click="showMarkdownViewer = !showMarkdownViewer"
-                  />
-                </div>
+                <DocumentsDocumentUpload
+                  ref="uploadComponentRef"
+                  :project-id="projectId"
+                  @uploaded="handleDocumentUploaded"
+                  @confirm-replace="handleConfirmReplace"
+                />
               </div>
             </template>
 
             <div v-if="!(documentsQuery.data.value as any)?.data || (documentsQuery.data.value as any).data.length === 0" class="text-sm text-muted">
-              No document uploaded yet. Upload a PDF to extract references.
+              No document uploaded yet. Upload a PDF to extract claims and references.
             </div>
-            <div v-else class="space-y-2">
-              <div v-for="doc in (documentsQuery.data.value as any).data" :key="doc.id" class="text-sm">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <div class="font-medium">{{ doc.filename }}</div>
-                    <div class="text-muted">
-                      {{ doc.document_title || 'No title' }} •
-                      {{ doc.page_count ? `${doc.page_count} pages` : 'Unknown pages' }}
-                    </div>
+
+            <div v-else class="space-y-3">
+              <!-- Show only the first/latest document -->
+              <div class="flex items-start justify-between">
+                <div class="space-y-1">
+                  <div class="font-medium text-sm">
+                    {{ (documentsQuery.data.value as any).data[0].filename }}
                   </div>
-                  <UButton
-                    size="xs"
-                    variant="ghost"
-                    icon="i-lucide-eye"
-                    @click="selectedDocumentId = doc.id; showMarkdownViewer = true"
-                  />
+                  <div class="text-xs text-muted">
+                    {{ (documentsQuery.data.value as any).data[0].document_title || 'No title' }}
+                  </div>
+                  <div class="text-xs text-muted">
+                    {{ (documentsQuery.data.value as any).data[0].page_count ?
+                       `${(documentsQuery.data.value as any).data[0].page_count} pages` :
+                       'Unknown pages' }}
+                  </div>
+                  <div class="text-xs text-muted">
+                    Uploaded {{ new Date((documentsQuery.data.value as any).data[0].created_at).toLocaleDateString() }}
+                  </div>
                 </div>
+                <UButton
+                  size="xs"
+                  variant="ghost"
+                  icon="i-lucide-eye"
+                  label="View"
+                  @click="selectedDocumentId = (documentsQuery.data.value as any).data[0].id; showMarkdownViewer = true"
+                />
+              </div>
+
+              <!-- Replace Document Button -->
+              <div class="pt-2 border-t">
+                <DocumentsDocumentUpload
+                  :project-id="projectId"
+                  @uploaded="handleDocumentUploaded"
+                  @confirm-replace="handleConfirmReplace"
+                />
+                <p class="text-xs text-muted mt-1">
+                  Uploading a new document will replace the current one and delete all claims.
+                </p>
               </div>
             </div>
           </UCard>
@@ -260,4 +300,44 @@ const claimColumns = [
       </div>
     </template>
   </UDashboardPanel>
+
+  <!-- Confirmation Modal -->
+  <UModal v-model:open="showReplaceConfirmation">
+    <template #content>
+      <div class="p-6 space-y-4">
+        <div class="flex items-center gap-2">
+          <UIcon name="i-lucide-alert-triangle" class="text-warning-500 w-6 h-6" />
+          <h3 class="text-lg font-semibold">Replace Existing Document?</h3>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-sm">
+            This project already has a document. Uploading a new document will:
+          </p>
+          <ul class="text-sm space-y-1 list-disc list-inside text-muted">
+            <li>Delete the existing document</li>
+            <li>Delete all extracted claims</li>
+            <li>Delete all claim-reference links</li>
+          </ul>
+          <p class="text-sm font-medium">
+            This action cannot be undone. Are you sure you want to continue?
+          </p>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            label="Cancel"
+            @click="handleConfirmReplaceCancel"
+          />
+          <UButton
+            color="error"
+            label="Replace Document"
+            @click="handleConfirmReplaceAccept"
+          />
+        </div>
+      </div>
+    </template>
+  </UModal>
 </template>

@@ -25,15 +25,15 @@ Returns:
     Document ID and markdown content
  * @summary Process Pdf
  */
-export const processPdfApiV1ProcessPdfPostQueryParams = zod.object({
+export const processPdfQueryParams = zod.object({
   "project_id": zod.number()
 })
 
-export const processPdfApiV1ProcessPdfPostBody = zod.object({
+export const processPdfBody = zod.object({
   "file": zod.instanceof(File)
 })
 
-export const processPdfApiV1ProcessPdfPostResponse = zod.object({
+export const processPdfResponse = zod.object({
   "project_id": zod.number(),
   "document_id": zod.number(),
   "filename": zod.string(),
@@ -59,12 +59,12 @@ Returns:
     Extraction response with statistics
  * @summary Process Text
  */
-export const processTextApiV1ProcessTextPostBody = zod.object({
+export const extractClaimsAndReferencesBody = zod.object({
   "text": zod.string().describe('Text to extract claims and references from'),
   "project_id": zod.number().describe('Project ID to associate the extracted claims with')
 }).describe('Schema for text extraction request.')
 
-export const processTextApiV1ProcessTextPostResponse = zod.object({
+export const extractClaimsAndReferencesResponse = zod.object({
   "project_id": zod.number(),
   "extraction_result": zod.object({
   "claims": zod.array(zod.object({

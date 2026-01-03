@@ -17,7 +17,7 @@ from app.schemas.pagination import PaginatedResponse
 router = APIRouter(prefix="/claims", tags=["claims"])
 
 
-@router.get("/", operation_id="listClaims", response_model=PaginatedResponse[ClaimOut])
+@router.get("/", response_model=PaginatedResponse[ClaimOut])
 async def list_claims(
     project_id: int | None = Query(None, description="Filter by project ID"),
     page: int = Query(1, ge=1, description="Page number (1-indexed)"),
@@ -72,7 +72,7 @@ async def list_claims(
     )
 
 
-@router.post("/", operation_id="createClaim", response_model=ClaimOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=ClaimOut, status_code=status.HTTP_201_CREATED)
 async def create_claim(payload: ClaimCreate, db: AsyncSession = Depends(get_db)):
     """Create a new claim and optionally link it to references."""
     # Verify project exists
@@ -114,7 +114,7 @@ async def create_claim(payload: ClaimCreate, db: AsyncSession = Depends(get_db))
     return claim_out
 
 
-@router.get("/{claim_id}", operation_id="getClaim", response_model=ClaimWithReferences)
+@router.get("/{claim_id}", response_model=ClaimWithReferences)
 async def get_claim(claim_id: int, db: AsyncSession = Depends(get_db)):
     """Get a claim with full reference details."""
     claim = await db.get(Claim, claim_id)
@@ -136,7 +136,7 @@ async def get_claim(claim_id: int, db: AsyncSession = Depends(get_db)):
     return ClaimWithReferences(**claim_dict)
 
 
-@router.put("/{claim_id}", operation_id="updateClaim", response_model=ClaimOut)
+@router.put("/{claim_id}", response_model=ClaimOut)
 async def update_claim(
     claim_id: int,
     payload: ClaimUpdate,
@@ -165,7 +165,7 @@ async def update_claim(
     return claim_out
 
 
-@router.delete("/{claim_id}", operation_id="deleteClaim", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{claim_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_claim(claim_id: int, db: AsyncSession = Depends(get_db)):
     """Delete a claim."""
     claim = await db.get(Claim, claim_id)
@@ -177,7 +177,7 @@ async def delete_claim(claim_id: int, db: AsyncSession = Depends(get_db)):
     return None
 
 
-@router.post("/{claim_id}/references/{reference_id}", operation_id="linkClaimToReference", response_model=ClaimOut)
+@router.post("/{claim_id}/references/{reference_id}", response_model=ClaimOut)
 async def link_claim_to_reference(
     claim_id: int,
     reference_id: int,
@@ -234,7 +234,7 @@ async def link_claim_to_reference(
     return claim_out
 
 
-@router.delete("/{claim_id}/references/{reference_id}", operation_id="unlinkClaimFromReference", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{claim_id}/references/{reference_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def unlink_claim_from_reference(
     claim_id: int,
     reference_id: int,

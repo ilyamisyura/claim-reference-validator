@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
-import { useCreateProjectApiV1ProjectsPost } from '@lib/api/v1/endpoints/projects'
+import { useCreateProject } from '@lib/api/v1/endpoints/projects'
 
 const router = useRouter()
 const queryClient = useQueryClient()
@@ -11,7 +11,7 @@ const form = reactive({
   status: 'draft' as 'draft' | 'processing' | 'ready'
 })
 
-const createMutation = useCreateProjectApiV1ProjectsPost({
+const createMutation = useCreateProject({
   mutation: {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['projects'] })

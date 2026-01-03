@@ -41,8 +41,8 @@ import type {
   ClaimUpdate,
   ClaimWithReferences,
   HTTPValidationError,
-  LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams,
-  ListClaimsApiV1ClaimsGetParams,
+  LinkClaimToReferenceParams,
+  ListClaimsParams,
   PaginatedResponseClaimOut
 } from '../models';
 
@@ -55,8 +55,8 @@ import type {
  * List claims with optional filtering by project.
  * @summary List Claims
  */
-export const listClaimsApiV1ClaimsGet = (
-    params?: MaybeRef<ListClaimsApiV1ClaimsGetParams>, options?: AxiosRequestConfig
+export const listClaims = (
+    params?: MaybeRef<ListClaimsParams>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<PaginatedResponseClaimOut>> => {
     params = unref(params);
     
@@ -70,45 +70,45 @@ export const listClaimsApiV1ClaimsGet = (
 
 
 
-export const getListClaimsApiV1ClaimsGetQueryKey = (params?: MaybeRef<ListClaimsApiV1ClaimsGetParams>,) => {
+export const getListClaimsQueryKey = (params?: MaybeRef<ListClaimsParams>,) => {
     return [
     'api','v1','claims', ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getListClaimsApiV1ClaimsGetQueryOptions = <TData = Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListClaimsApiV1ClaimsGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getListClaimsQueryOptions = <TData = Awaited<ReturnType<typeof listClaims>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListClaimsParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listClaims>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getListClaimsApiV1ClaimsGetQueryKey(params);
+  const queryKey =  getListClaimsQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>> = ({ signal }) => listClaimsApiV1ClaimsGet(params, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClaims>>> = ({ signal }) => listClaims(params, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>, TError, TData> 
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClaims>>, TError, TData> 
 }
 
-export type ListClaimsApiV1ClaimsGetQueryResult = NonNullable<Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>>
-export type ListClaimsApiV1ClaimsGetQueryError = AxiosError<HTTPValidationError>
+export type ListClaimsQueryResult = NonNullable<Awaited<ReturnType<typeof listClaims>>>
+export type ListClaimsQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary List Claims
  */
 
-export function useListClaimsApiV1ClaimsGet<TData = Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>, TError = AxiosError<HTTPValidationError>>(
- params?: MaybeRef<ListClaimsApiV1ClaimsGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listClaimsApiV1ClaimsGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useListClaims<TData = Awaited<ReturnType<typeof listClaims>>, TError = AxiosError<HTTPValidationError>>(
+ params?: MaybeRef<ListClaimsParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listClaims>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getListClaimsApiV1ClaimsGetQueryOptions(params,options)
+  const queryOptions = getListClaimsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -124,7 +124,7 @@ export function useListClaimsApiV1ClaimsGet<TData = Awaited<ReturnType<typeof li
  * Create a new claim and optionally link it to references.
  * @summary Create Claim
  */
-export const createClaimApiV1ClaimsPost = (
+export const createClaim = (
     claimCreate: MaybeRef<ClaimCreate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ClaimOut>> => {
     claimCreate = unref(claimCreate);
@@ -137,11 +137,11 @@ export const createClaimApiV1ClaimsPost = (
 
 
 
-export const getCreateClaimApiV1ClaimsPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>, TError,{data: ClaimCreate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>, TError,{data: ClaimCreate}, TContext> => {
+export const getCreateClaimMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClaim>>, TError,{data: ClaimCreate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof createClaim>>, TError,{data: ClaimCreate}, TContext> => {
 
-const mutationKey = ['createClaimApiV1ClaimsPost'];
+const mutationKey = ['createClaim'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -151,10 +151,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>, {data: ClaimCreate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createClaim>>, {data: ClaimCreate}> = (props) => {
           const {data} = props ?? {};
 
-          return  createClaimApiV1ClaimsPost(data,axiosOptions)
+          return  createClaim(data,axiosOptions)
         }
 
         
@@ -162,23 +162,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateClaimApiV1ClaimsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>>
-    export type CreateClaimApiV1ClaimsPostMutationBody = ClaimCreate
-    export type CreateClaimApiV1ClaimsPostMutationError = AxiosError<HTTPValidationError>
+    export type CreateClaimMutationResult = NonNullable<Awaited<ReturnType<typeof createClaim>>>
+    export type CreateClaimMutationBody = ClaimCreate
+    export type CreateClaimMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Create Claim
  */
-export const useCreateClaimApiV1ClaimsPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>, TError,{data: ClaimCreate}, TContext>, axios?: AxiosRequestConfig}
+export const useCreateClaim = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClaim>>, TError,{data: ClaimCreate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof createClaimApiV1ClaimsPost>>,
+        Awaited<ReturnType<typeof createClaim>>,
         TError,
         {data: ClaimCreate},
         TContext
       > => {
 
-      const mutationOptions = getCreateClaimApiV1ClaimsPostMutationOptions(options);
+      const mutationOptions = getCreateClaimMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -186,7 +186,7 @@ export const useCreateClaimApiV1ClaimsPost = <TError = AxiosError<HTTPValidation
  * Get a claim with full reference details.
  * @summary Get Claim
  */
-export const getClaimApiV1ClaimsClaimIdGet = (
+export const getClaim = (
     claimId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ClaimWithReferences>> => {
     claimId = unref(claimId);
@@ -199,45 +199,45 @@ export const getClaimApiV1ClaimsClaimIdGet = (
 
 
 
-export const getGetClaimApiV1ClaimsClaimIdGetQueryKey = (claimId?: MaybeRef<number>,) => {
+export const getGetClaimQueryKey = (claimId?: MaybeRef<number>,) => {
     return [
     'api','v1','claims',claimId
     ] as const;
     }
 
     
-export const getGetClaimApiV1ClaimsClaimIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>, TError = AxiosError<HTTPValidationError>>(claimId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetClaimQueryOptions = <TData = Awaited<ReturnType<typeof getClaim>>, TError = AxiosError<HTTPValidationError>>(claimId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getClaim>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getGetClaimApiV1ClaimsClaimIdGetQueryKey(claimId);
+  const queryKey =  getGetClaimQueryKey(claimId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>> = ({ signal }) => getClaimApiV1ClaimsClaimIdGet(claimId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClaim>>> = ({ signal }) => getClaim(claimId, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(claimId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>, TError, TData> 
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(claimId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClaim>>, TError, TData> 
 }
 
-export type GetClaimApiV1ClaimsClaimIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>>
-export type GetClaimApiV1ClaimsClaimIdGetQueryError = AxiosError<HTTPValidationError>
+export type GetClaimQueryResult = NonNullable<Awaited<ReturnType<typeof getClaim>>>
+export type GetClaimQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary Get Claim
  */
 
-export function useGetClaimApiV1ClaimsClaimIdGet<TData = Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>, TError = AxiosError<HTTPValidationError>>(
- claimId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getClaimApiV1ClaimsClaimIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetClaim<TData = Awaited<ReturnType<typeof getClaim>>, TError = AxiosError<HTTPValidationError>>(
+ claimId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getClaim>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getGetClaimApiV1ClaimsClaimIdGetQueryOptions(claimId,options)
+  const queryOptions = getGetClaimQueryOptions(claimId,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -253,7 +253,7 @@ export function useGetClaimApiV1ClaimsClaimIdGet<TData = Awaited<ReturnType<type
  * Update a claim.
  * @summary Update Claim
  */
-export const updateClaimApiV1ClaimsClaimIdPut = (
+export const updateClaim = (
     claimId: MaybeRef<number>,
     claimUpdate: MaybeRef<ClaimUpdate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ClaimOut>> => {
@@ -268,11 +268,11 @@ claimUpdate = unref(claimUpdate);
 
 
 
-export const getUpdateClaimApiV1ClaimsClaimIdPutMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>, TError,{claimId: number;data: ClaimUpdate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>, TError,{claimId: number;data: ClaimUpdate}, TContext> => {
+export const getUpdateClaimMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClaim>>, TError,{claimId: number;data: ClaimUpdate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof updateClaim>>, TError,{claimId: number;data: ClaimUpdate}, TContext> => {
 
-const mutationKey = ['updateClaimApiV1ClaimsClaimIdPut'];
+const mutationKey = ['updateClaim'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -282,10 +282,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>, {claimId: number;data: ClaimUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateClaim>>, {claimId: number;data: ClaimUpdate}> = (props) => {
           const {claimId,data} = props ?? {};
 
-          return  updateClaimApiV1ClaimsClaimIdPut(claimId,data,axiosOptions)
+          return  updateClaim(claimId,data,axiosOptions)
         }
 
         
@@ -293,23 +293,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UpdateClaimApiV1ClaimsClaimIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>>
-    export type UpdateClaimApiV1ClaimsClaimIdPutMutationBody = ClaimUpdate
-    export type UpdateClaimApiV1ClaimsClaimIdPutMutationError = AxiosError<HTTPValidationError>
+    export type UpdateClaimMutationResult = NonNullable<Awaited<ReturnType<typeof updateClaim>>>
+    export type UpdateClaimMutationBody = ClaimUpdate
+    export type UpdateClaimMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Update Claim
  */
-export const useUpdateClaimApiV1ClaimsClaimIdPut = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>, TError,{claimId: number;data: ClaimUpdate}, TContext>, axios?: AxiosRequestConfig}
+export const useUpdateClaim = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClaim>>, TError,{claimId: number;data: ClaimUpdate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof updateClaimApiV1ClaimsClaimIdPut>>,
+        Awaited<ReturnType<typeof updateClaim>>,
         TError,
         {claimId: number;data: ClaimUpdate},
         TContext
       > => {
 
-      const mutationOptions = getUpdateClaimApiV1ClaimsClaimIdPutMutationOptions(options);
+      const mutationOptions = getUpdateClaimMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -317,7 +317,7 @@ export const useUpdateClaimApiV1ClaimsClaimIdPut = <TError = AxiosError<HTTPVali
  * Delete a claim.
  * @summary Delete Claim
  */
-export const deleteClaimApiV1ClaimsClaimIdDelete = (
+export const deleteClaim = (
     claimId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<void>> => {
     claimId = unref(claimId);
@@ -329,11 +329,11 @@ export const deleteClaimApiV1ClaimsClaimIdDelete = (
 
 
 
-export const getDeleteClaimApiV1ClaimsClaimIdDeleteMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>, TError,{claimId: number}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>, TError,{claimId: number}, TContext> => {
+export const getDeleteClaimMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteClaim>>, TError,{claimId: number}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteClaim>>, TError,{claimId: number}, TContext> => {
 
-const mutationKey = ['deleteClaimApiV1ClaimsClaimIdDelete'];
+const mutationKey = ['deleteClaim'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -343,10 +343,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>, {claimId: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteClaim>>, {claimId: number}> = (props) => {
           const {claimId} = props ?? {};
 
-          return  deleteClaimApiV1ClaimsClaimIdDelete(claimId,axiosOptions)
+          return  deleteClaim(claimId,axiosOptions)
         }
 
         
@@ -354,23 +354,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteClaimApiV1ClaimsClaimIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>>
+    export type DeleteClaimMutationResult = NonNullable<Awaited<ReturnType<typeof deleteClaim>>>
     
-    export type DeleteClaimApiV1ClaimsClaimIdDeleteMutationError = AxiosError<HTTPValidationError>
+    export type DeleteClaimMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Delete Claim
  */
-export const useDeleteClaimApiV1ClaimsClaimIdDelete = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>, TError,{claimId: number}, TContext>, axios?: AxiosRequestConfig}
+export const useDeleteClaim = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteClaim>>, TError,{claimId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof deleteClaimApiV1ClaimsClaimIdDelete>>,
+        Awaited<ReturnType<typeof deleteClaim>>,
         TError,
         {claimId: number},
         TContext
       > => {
 
-      const mutationOptions = getDeleteClaimApiV1ClaimsClaimIdDeleteMutationOptions(options);
+      const mutationOptions = getDeleteClaimMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -378,10 +378,10 @@ export const useDeleteClaimApiV1ClaimsClaimIdDelete = <TError = AxiosError<HTTPV
  * Link a claim to a reference.
  * @summary Link Claim To Reference
  */
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost = (
+export const linkClaimToReference = (
     claimId: MaybeRef<number>,
     referenceId: MaybeRef<number>,
-    params?: MaybeRef<LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams>, options?: AxiosRequestConfig
+    params?: MaybeRef<LinkClaimToReferenceParams>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ClaimOut>> => {
     claimId = unref(claimId);
 referenceId = unref(referenceId);
@@ -396,11 +396,11 @@ params = unref(params);
 
 
 
-export const getLinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams}, TContext> => {
+export const getLinkClaimToReferenceMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReference>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceParams}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReference>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceParams}, TContext> => {
 
-const mutationKey = ['linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost'];
+const mutationKey = ['linkClaimToReference'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -410,10 +410,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>, {claimId: number;referenceId: number;params?: LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof linkClaimToReference>>, {claimId: number;referenceId: number;params?: LinkClaimToReferenceParams}> = (props) => {
           const {claimId,referenceId,params} = props ?? {};
 
-          return  linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost(claimId,referenceId,params,axiosOptions)
+          return  linkClaimToReference(claimId,referenceId,params,axiosOptions)
         }
 
         
@@ -421,23 +421,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostMutationResult = NonNullable<Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>>
+    export type LinkClaimToReferenceMutationResult = NonNullable<Awaited<ReturnType<typeof linkClaimToReference>>>
     
-    export type LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostMutationError = AxiosError<HTTPValidationError>
+    export type LinkClaimToReferenceMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Link Claim To Reference
  */
-export const useLinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams}, TContext>, axios?: AxiosRequestConfig}
+export const useLinkClaimToReference = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof linkClaimToReference>>, TError,{claimId: number;referenceId: number;params?: LinkClaimToReferenceParams}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost>>,
+        Awaited<ReturnType<typeof linkClaimToReference>>,
         TError,
-        {claimId: number;referenceId: number;params?: LinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams},
+        {claimId: number;referenceId: number;params?: LinkClaimToReferenceParams},
         TContext
       > => {
 
-      const mutationOptions = getLinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostMutationOptions(options);
+      const mutationOptions = getLinkClaimToReferenceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -445,7 +445,7 @@ export const useLinkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPost 
  * Unlink a claim from a reference.
  * @summary Unlink Claim From Reference
  */
-export const unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete = (
+export const unlinkClaimFromReference = (
     claimId: MaybeRef<number>,
     referenceId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<void>> => {
@@ -459,11 +459,11 @@ referenceId = unref(referenceId);
 
 
 
-export const getUnlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDeleteMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>, TError,{claimId: number;referenceId: number}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>, TError,{claimId: number;referenceId: number}, TContext> => {
+export const getUnlinkClaimFromReferenceMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReference>>, TError,{claimId: number;referenceId: number}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReference>>, TError,{claimId: number;referenceId: number}, TContext> => {
 
-const mutationKey = ['unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete'];
+const mutationKey = ['unlinkClaimFromReference'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -473,10 +473,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>, {claimId: number;referenceId: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unlinkClaimFromReference>>, {claimId: number;referenceId: number}> = (props) => {
           const {claimId,referenceId} = props ?? {};
 
-          return  unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete(claimId,referenceId,axiosOptions)
+          return  unlinkClaimFromReference(claimId,referenceId,axiosOptions)
         }
 
         
@@ -484,23 +484,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UnlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>>
+    export type UnlinkClaimFromReferenceMutationResult = NonNullable<Awaited<ReturnType<typeof unlinkClaimFromReference>>>
     
-    export type UnlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDeleteMutationError = AxiosError<HTTPValidationError>
+    export type UnlinkClaimFromReferenceMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Unlink Claim From Reference
  */
-export const useUnlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>, TError,{claimId: number;referenceId: number}, TContext>, axios?: AxiosRequestConfig}
+export const useUnlinkClaimFromReference = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unlinkClaimFromReference>>, TError,{claimId: number;referenceId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDelete>>,
+        Awaited<ReturnType<typeof unlinkClaimFromReference>>,
         TError,
         {claimId: number;referenceId: number},
         TContext
       > => {
 
-      const mutationOptions = getUnlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDeleteMutationOptions(options);
+      const mutationOptions = getUnlinkClaimFromReferenceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

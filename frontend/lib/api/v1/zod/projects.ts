@@ -11,25 +11,25 @@ import * as zod from 'zod';
 /**
  * @summary List Projects
  */
-export const listProjectsApiV1ProjectsGetQueryPageDefault = 1;
+export const listProjectsQueryPageDefault = 1;
 
-export const listProjectsApiV1ProjectsGetQueryPageSizeDefault = 20;
-export const listProjectsApiV1ProjectsGetQueryPageSizeMax = 100;
+export const listProjectsQueryPageSizeDefault = 20;
+export const listProjectsQueryPageSizeMax = 100;
 
 
 
-export const listProjectsApiV1ProjectsGetQueryParams = zod.object({
-  "page": zod.number().min(1).default(listProjectsApiV1ProjectsGetQueryPageDefault).describe('Page number (1-indexed)'),
-  "page_size": zod.number().min(1).max(listProjectsApiV1ProjectsGetQueryPageSizeMax).default(listProjectsApiV1ProjectsGetQueryPageSizeDefault).describe('Items per page')
+export const listProjectsQueryParams = zod.object({
+  "page": zod.number().min(1).default(listProjectsQueryPageDefault).describe('Page number (1-indexed)'),
+  "page_size": zod.number().min(1).max(listProjectsQueryPageSizeMax).default(listProjectsQueryPageSizeDefault).describe('Items per page')
 })
 
-export const listProjectsApiV1ProjectsGetResponseDataItemStatusDefault = "draft";
+export const listProjectsResponseDataItemStatusDefault = "draft";
 
-export const listProjectsApiV1ProjectsGetResponse = zod.object({
+export const listProjectsResponse = zod.object({
   "data": zod.array(zod.object({
   "name": zod.string(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
-  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(listProjectsApiV1ProjectsGetResponseDataItemStatusDefault),
+  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(listProjectsResponseDataItemStatusDefault),
   "id": zod.number(),
   "document_path": zod.union([zod.string(),zod.null()]).optional(),
   "document_filename": zod.union([zod.string(),zod.null()]).optional(),
@@ -45,27 +45,27 @@ export const listProjectsApiV1ProjectsGetResponse = zod.object({
 /**
  * @summary Create Project
  */
-export const createProjectApiV1ProjectsPostBodyStatusDefault = "draft";
+export const createProjectBodyStatusDefault = "draft";
 
-export const createProjectApiV1ProjectsPostBody = zod.object({
+export const createProjectBody = zod.object({
   "name": zod.string(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
-  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(createProjectApiV1ProjectsPostBodyStatusDefault)
+  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(createProjectBodyStatusDefault)
 })
 
 /**
  * @summary Get Project
  */
-export const getProjectApiV1ProjectsProjectIdGetParams = zod.object({
+export const getProjectParams = zod.object({
   "project_id": zod.number()
 })
 
-export const getProjectApiV1ProjectsProjectIdGetResponseStatusDefault = "draft";
+export const getProjectResponseStatusDefault = "draft";
 
-export const getProjectApiV1ProjectsProjectIdGetResponse = zod.object({
+export const getProjectResponse = zod.object({
   "name": zod.string(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
-  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(getProjectApiV1ProjectsProjectIdGetResponseStatusDefault),
+  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(getProjectResponseStatusDefault),
   "id": zod.number(),
   "document_path": zod.union([zod.string(),zod.null()]).optional(),
   "document_filename": zod.union([zod.string(),zod.null()]).optional(),
@@ -76,11 +76,11 @@ export const getProjectApiV1ProjectsProjectIdGetResponse = zod.object({
 /**
  * @summary Update Project
  */
-export const updateProjectApiV1ProjectsProjectIdPutParams = zod.object({
+export const updateProjectParams = zod.object({
   "project_id": zod.number()
 })
 
-export const updateProjectApiV1ProjectsProjectIdPutBody = zod.object({
+export const updateProjectBody = zod.object({
   "name": zod.union([zod.string(),zod.null()]).optional(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
   "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).optional(),
@@ -88,12 +88,12 @@ export const updateProjectApiV1ProjectsProjectIdPutBody = zod.object({
   "document_filename": zod.union([zod.string(),zod.null()]).optional()
 })
 
-export const updateProjectApiV1ProjectsProjectIdPutResponseStatusDefault = "draft";
+export const updateProjectResponseStatusDefault = "draft";
 
-export const updateProjectApiV1ProjectsProjectIdPutResponse = zod.object({
+export const updateProjectResponse = zod.object({
   "name": zod.string(),
   "description": zod.union([zod.string(),zod.null()]).optional(),
-  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(updateProjectApiV1ProjectsProjectIdPutResponseStatusDefault),
+  "status": zod.union([zod.enum(['draft', 'processing', 'ready']),zod.null()]).default(updateProjectResponseStatusDefault),
   "id": zod.number(),
   "document_path": zod.union([zod.string(),zod.null()]).optional(),
   "document_filename": zod.union([zod.string(),zod.null()]).optional(),
@@ -104,7 +104,7 @@ export const updateProjectApiV1ProjectsProjectIdPutResponse = zod.object({
 /**
  * @summary Delete Project
  */
-export const deleteProjectApiV1ProjectsProjectIdDeleteParams = zod.object({
+export const deleteProjectParams = zod.object({
   "project_id": zod.number()
 })
 

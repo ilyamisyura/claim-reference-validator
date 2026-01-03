@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import {
-  useGetProjectApiV1ProjectsProjectIdGet,
-  useUpdateProjectApiV1ProjectsProjectIdPut
+  useGetProject,
+  useUpdateProject
 } from '@lib/api/v1/endpoints/projects'
 
 const route = useRoute()
@@ -11,7 +11,7 @@ const queryClient = useQueryClient()
 
 const projectId = computed(() => Number(route.params.id))
 
-const projectQuery = useGetProjectApiV1ProjectsProjectIdGet(projectId)
+const projectQuery = useGetProject(projectId)
 
 const form = reactive({
   name: '',
@@ -28,7 +28,7 @@ watchEffect(() => {
   }
 })
 
-const updateMutation = useUpdateProjectApiV1ProjectsProjectIdPut({
+const updateMutation = useUpdateProject({
   mutation: {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: projectQuery.queryKey })

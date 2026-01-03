@@ -12,22 +12,22 @@ import * as zod from 'zod';
  * List claims with optional filtering by project.
  * @summary List Claims
  */
-export const listClaimsApiV1ClaimsGetQueryPageDefault = 1;
+export const listClaimsQueryPageDefault = 1;
 
-export const listClaimsApiV1ClaimsGetQueryPageSizeDefault = 20;
-export const listClaimsApiV1ClaimsGetQueryPageSizeMax = 100;
+export const listClaimsQueryPageSizeDefault = 20;
+export const listClaimsQueryPageSizeMax = 100;
 
 
 
-export const listClaimsApiV1ClaimsGetQueryParams = zod.object({
+export const listClaimsQueryParams = zod.object({
   "project_id": zod.union([zod.number(),zod.null()]).optional().describe('Filter by project ID'),
-  "page": zod.number().min(1).default(listClaimsApiV1ClaimsGetQueryPageDefault).describe('Page number (1-indexed)'),
-  "page_size": zod.number().min(1).max(listClaimsApiV1ClaimsGetQueryPageSizeMax).default(listClaimsApiV1ClaimsGetQueryPageSizeDefault).describe('Items per page')
+  "page": zod.number().min(1).default(listClaimsQueryPageDefault).describe('Page number (1-indexed)'),
+  "page_size": zod.number().min(1).max(listClaimsQueryPageSizeMax).default(listClaimsQueryPageSizeDefault).describe('Items per page')
 })
 
-export const listClaimsApiV1ClaimsGetResponseDataItemReferencesDefault = [];
+export const listClaimsResponseDataItemReferencesDefault = [];
 
-export const listClaimsApiV1ClaimsGetResponse = zod.object({
+export const listClaimsResponse = zod.object({
   "data": zod.array(zod.object({
   "text": zod.string(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
@@ -38,7 +38,7 @@ export const listClaimsApiV1ClaimsGetResponse = zod.object({
   "verification_status": zod.string(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({}),
-  "references": zod.array(zod.number()).default(listClaimsApiV1ClaimsGetResponseDataItemReferencesDefault)
+  "references": zod.array(zod.number()).default(listClaimsResponseDataItemReferencesDefault)
 }).describe('Schema for claim output')).describe('List of items'),
   "total": zod.number().describe('Total number of items'),
   "page": zod.number().describe('Current page number (1-indexed)'),
@@ -50,28 +50,28 @@ export const listClaimsApiV1ClaimsGetResponse = zod.object({
  * Create a new claim and optionally link it to references.
  * @summary Create Claim
  */
-export const createClaimApiV1ClaimsPostBodyReferenceIdsDefault = [];
+export const createClaimBodyReferenceIdsDefault = [];
 
-export const createClaimApiV1ClaimsPostBody = zod.object({
+export const createClaimBody = zod.object({
   "text": zod.string(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
   "page_number": zod.union([zod.number(),zod.null()]).optional(),
   "paragraph_index": zod.union([zod.number(),zod.null()]).optional(),
   "project_id": zod.number(),
-  "reference_ids": zod.array(zod.number()).default(createClaimApiV1ClaimsPostBodyReferenceIdsDefault)
+  "reference_ids": zod.array(zod.number()).default(createClaimBodyReferenceIdsDefault)
 }).describe('Schema for creating a claim')
 
 /**
  * Get a claim with full reference details.
  * @summary Get Claim
  */
-export const getClaimApiV1ClaimsClaimIdGetParams = zod.object({
+export const getClaimParams = zod.object({
   "claim_id": zod.number()
 })
 
-export const getClaimApiV1ClaimsClaimIdGetResponseReferencesDefault = [];export const getClaimApiV1ClaimsClaimIdGetResponseReferenceDetailsDefault = [];
+export const getClaimResponseReferencesDefault = [];export const getClaimResponseReferenceDetailsDefault = [];
 
-export const getClaimApiV1ClaimsClaimIdGetResponse = zod.object({
+export const getClaimResponse = zod.object({
   "text": zod.string(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
   "page_number": zod.union([zod.number(),zod.null()]).optional(),
@@ -81,7 +81,7 @@ export const getClaimApiV1ClaimsClaimIdGetResponse = zod.object({
   "verification_status": zod.string(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({}),
-  "references": zod.array(zod.number()).default(getClaimApiV1ClaimsClaimIdGetResponseReferencesDefault),
+  "references": zod.array(zod.number()).default(getClaimResponseReferencesDefault),
   "reference_details": zod.array(zod.object({
   "doi": zod.union([zod.string(),zod.null()]).optional(),
   "title": zod.string(),
@@ -94,18 +94,18 @@ export const getClaimApiV1ClaimsClaimIdGetResponse = zod.object({
   "is_processed": zod.boolean(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({})
-}).describe('Schema for reference output')).default(getClaimApiV1ClaimsClaimIdGetResponseReferenceDetailsDefault)
+}).describe('Schema for reference output')).default(getClaimResponseReferenceDetailsDefault)
 }).describe('Schema for claim with full reference details')
 
 /**
  * Update a claim.
  * @summary Update Claim
  */
-export const updateClaimApiV1ClaimsClaimIdPutParams = zod.object({
+export const updateClaimParams = zod.object({
   "claim_id": zod.number()
 })
 
-export const updateClaimApiV1ClaimsClaimIdPutBody = zod.object({
+export const updateClaimBody = zod.object({
   "text": zod.union([zod.string(),zod.null()]).optional(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
   "page_number": zod.union([zod.number(),zod.null()]).optional(),
@@ -113,9 +113,9 @@ export const updateClaimApiV1ClaimsClaimIdPutBody = zod.object({
   "verification_status": zod.union([zod.string(),zod.null()]).optional()
 }).describe('Schema for updating a claim')
 
-export const updateClaimApiV1ClaimsClaimIdPutResponseReferencesDefault = [];
+export const updateClaimResponseReferencesDefault = [];
 
-export const updateClaimApiV1ClaimsClaimIdPutResponse = zod.object({
+export const updateClaimResponse = zod.object({
   "text": zod.string(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
   "page_number": zod.union([zod.number(),zod.null()]).optional(),
@@ -125,14 +125,14 @@ export const updateClaimApiV1ClaimsClaimIdPutResponse = zod.object({
   "verification_status": zod.string(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({}),
-  "references": zod.array(zod.number()).default(updateClaimApiV1ClaimsClaimIdPutResponseReferencesDefault)
+  "references": zod.array(zod.number()).default(updateClaimResponseReferencesDefault)
 }).describe('Schema for claim output')
 
 /**
  * Delete a claim.
  * @summary Delete Claim
  */
-export const deleteClaimApiV1ClaimsClaimIdDeleteParams = zod.object({
+export const deleteClaimParams = zod.object({
   "claim_id": zod.number()
 })
 
@@ -140,24 +140,24 @@ export const deleteClaimApiV1ClaimsClaimIdDeleteParams = zod.object({
  * Link a claim to a reference.
  * @summary Link Claim To Reference
  */
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostParams = zod.object({
+export const linkClaimToReferenceParams = zod.object({
   "claim_id": zod.number(),
   "reference_id": zod.number()
 })
 
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostQueryRelevanceScoreMinOne = 0;
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostQueryRelevanceScoreMaxOne = 1;
+export const linkClaimToReferenceQueryRelevanceScoreMinOne = 0;
+export const linkClaimToReferenceQueryRelevanceScoreMaxOne = 1;
 
 
 
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostQueryParams = zod.object({
-  "relevance_score": zod.union([zod.number().min(linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostQueryRelevanceScoreMinOne).max(linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostQueryRelevanceScoreMaxOne),zod.null()]).optional(),
+export const linkClaimToReferenceQueryParams = zod.object({
+  "relevance_score": zod.union([zod.number().min(linkClaimToReferenceQueryRelevanceScoreMinOne).max(linkClaimToReferenceQueryRelevanceScoreMaxOne),zod.null()]).optional(),
   "context": zod.union([zod.string(),zod.null()]).optional()
 })
 
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostResponseReferencesDefault = [];
+export const linkClaimToReferenceResponseReferencesDefault = [];
 
-export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostResponse = zod.object({
+export const linkClaimToReferenceResponse = zod.object({
   "text": zod.string(),
   "claim_type": zod.union([zod.string(),zod.null()]).optional(),
   "page_number": zod.union([zod.number(),zod.null()]).optional(),
@@ -167,14 +167,14 @@ export const linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostResp
   "verification_status": zod.string(),
   "created_at": zod.iso.datetime({}),
   "updated_at": zod.iso.datetime({}),
-  "references": zod.array(zod.number()).default(linkClaimToReferenceApiV1ClaimsClaimIdReferencesReferenceIdPostResponseReferencesDefault)
+  "references": zod.array(zod.number()).default(linkClaimToReferenceResponseReferencesDefault)
 }).describe('Schema for claim output')
 
 /**
  * Unlink a claim from a reference.
  * @summary Unlink Claim From Reference
  */
-export const unlinkClaimFromReferenceApiV1ClaimsClaimIdReferencesReferenceIdDeleteParams = zod.object({
+export const unlinkClaimFromReferenceParams = zod.object({
   "claim_id": zod.number(),
   "reference_id": zod.number()
 })

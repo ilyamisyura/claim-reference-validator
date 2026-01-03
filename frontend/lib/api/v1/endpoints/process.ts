@@ -29,10 +29,10 @@ import type {
 } from 'vue';
 
 import type {
-  BodyProcessPdfApiV1ProcessPdfPost,
+  BodyProcessPdf,
   DoclingPDFToMarkdownResponse,
   HTTPValidationError,
-  ProcessPdfApiV1ProcessPdfPostParams,
+  ProcessPdfParams,
   TextExtractionRequest,
   TextExtractionResponse
 } from '../models';
@@ -59,14 +59,14 @@ Returns:
     Document ID and markdown content
  * @summary Process Pdf
  */
-export const processPdfApiV1ProcessPdfPost = (
-    bodyProcessPdfApiV1ProcessPdfPost: MaybeRef<BodyProcessPdfApiV1ProcessPdfPost>,
-    params: MaybeRef<ProcessPdfApiV1ProcessPdfPostParams>, options?: AxiosRequestConfig
+export const processPdf = (
+    bodyProcessPdf: MaybeRef<BodyProcessPdf>,
+    params: MaybeRef<ProcessPdfParams>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<DoclingPDFToMarkdownResponse>> => {
-    bodyProcessPdfApiV1ProcessPdfPost = unref(bodyProcessPdfApiV1ProcessPdfPost);
+    bodyProcessPdf = unref(bodyProcessPdf);
 params = unref(params);
     const formData = new FormData();
-formData.append(`file`, bodyProcessPdfApiV1ProcessPdfPost.file)
+formData.append(`file`, bodyProcessPdf.file)
 
     return axios.default.post(
       `/api/v1/process/pdf`,
@@ -78,11 +78,11 @@ formData.append(`file`, bodyProcessPdfApiV1ProcessPdfPost.file)
 
 
 
-export const getProcessPdfApiV1ProcessPdfPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>, TError,{data: BodyProcessPdfApiV1ProcessPdfPost;params: ProcessPdfApiV1ProcessPdfPostParams}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>, TError,{data: BodyProcessPdfApiV1ProcessPdfPost;params: ProcessPdfApiV1ProcessPdfPostParams}, TContext> => {
+export const getProcessPdfMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processPdf>>, TError,{data: BodyProcessPdf;params: ProcessPdfParams}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof processPdf>>, TError,{data: BodyProcessPdf;params: ProcessPdfParams}, TContext> => {
 
-const mutationKey = ['processPdfApiV1ProcessPdfPost'];
+const mutationKey = ['processPdf'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -92,10 +92,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>, {data: BodyProcessPdfApiV1ProcessPdfPost;params: ProcessPdfApiV1ProcessPdfPostParams}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof processPdf>>, {data: BodyProcessPdf;params: ProcessPdfParams}> = (props) => {
           const {data,params} = props ?? {};
 
-          return  processPdfApiV1ProcessPdfPost(data,params,axiosOptions)
+          return  processPdf(data,params,axiosOptions)
         }
 
         
@@ -103,23 +103,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type ProcessPdfApiV1ProcessPdfPostMutationResult = NonNullable<Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>>
-    export type ProcessPdfApiV1ProcessPdfPostMutationBody = BodyProcessPdfApiV1ProcessPdfPost
-    export type ProcessPdfApiV1ProcessPdfPostMutationError = AxiosError<HTTPValidationError>
+    export type ProcessPdfMutationResult = NonNullable<Awaited<ReturnType<typeof processPdf>>>
+    export type ProcessPdfMutationBody = BodyProcessPdf
+    export type ProcessPdfMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Process Pdf
  */
-export const useProcessPdfApiV1ProcessPdfPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>, TError,{data: BodyProcessPdfApiV1ProcessPdfPost;params: ProcessPdfApiV1ProcessPdfPostParams}, TContext>, axios?: AxiosRequestConfig}
+export const useProcessPdf = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processPdf>>, TError,{data: BodyProcessPdf;params: ProcessPdfParams}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof processPdfApiV1ProcessPdfPost>>,
+        Awaited<ReturnType<typeof processPdf>>,
         TError,
-        {data: BodyProcessPdfApiV1ProcessPdfPost;params: ProcessPdfApiV1ProcessPdfPostParams},
+        {data: BodyProcessPdf;params: ProcessPdfParams},
         TContext
       > => {
 
-      const mutationOptions = getProcessPdfApiV1ProcessPdfPostMutationOptions(options);
+      const mutationOptions = getProcessPdfMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -140,7 +140,7 @@ Returns:
     Extraction response with statistics
  * @summary Process Text
  */
-export const processTextApiV1ProcessTextPost = (
+export const extractClaimsAndReferences = (
     textExtractionRequest: MaybeRef<TextExtractionRequest>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<TextExtractionResponse>> => {
     textExtractionRequest = unref(textExtractionRequest);
@@ -153,11 +153,11 @@ export const processTextApiV1ProcessTextPost = (
 
 
 
-export const getProcessTextApiV1ProcessTextPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>, TError,{data: TextExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>, TError,{data: TextExtractionRequest}, TContext> => {
+export const getExtractClaimsAndReferencesMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractClaimsAndReferences>>, TError,{data: TextExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof extractClaimsAndReferences>>, TError,{data: TextExtractionRequest}, TContext> => {
 
-const mutationKey = ['processTextApiV1ProcessTextPost'];
+const mutationKey = ['extractClaimsAndReferences'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -167,10 +167,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>, {data: TextExtractionRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof extractClaimsAndReferences>>, {data: TextExtractionRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  processTextApiV1ProcessTextPost(data,axiosOptions)
+          return  extractClaimsAndReferences(data,axiosOptions)
         }
 
         
@@ -178,23 +178,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type ProcessTextApiV1ProcessTextPostMutationResult = NonNullable<Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>>
-    export type ProcessTextApiV1ProcessTextPostMutationBody = TextExtractionRequest
-    export type ProcessTextApiV1ProcessTextPostMutationError = AxiosError<HTTPValidationError>
+    export type ExtractClaimsAndReferencesMutationResult = NonNullable<Awaited<ReturnType<typeof extractClaimsAndReferences>>>
+    export type ExtractClaimsAndReferencesMutationBody = TextExtractionRequest
+    export type ExtractClaimsAndReferencesMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Process Text
  */
-export const useProcessTextApiV1ProcessTextPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>, TError,{data: TextExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
+export const useExtractClaimsAndReferences = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractClaimsAndReferences>>, TError,{data: TextExtractionRequest}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof processTextApiV1ProcessTextPost>>,
+        Awaited<ReturnType<typeof extractClaimsAndReferences>>,
         TError,
         {data: TextExtractionRequest},
         TContext
       > => {
 
-      const mutationOptions = getProcessTextApiV1ProcessTextPostMutationOptions(options);
+      const mutationOptions = getExtractClaimsAndReferencesMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

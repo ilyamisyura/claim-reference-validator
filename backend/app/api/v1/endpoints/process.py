@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/process", tags=["process"])
 
 
-@router.post("/pdf", response_model=DoclingPDFToMarkdownResponse)
+@router.post("/pdf", response_model=DoclingPDFToMarkdownResponse, operation_id="processPdf")
 async def process_pdf(
     project_id: int,
     file: UploadFile = File(...),
@@ -59,6 +59,15 @@ async def process_pdf(
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
+    # Check for existing documents
+    existing_docs_result = await session.execute(
+        select(Document).where(Document.project_id == project_id)
+    )
+    existing_docs = existing_docs_result.scalars().all()
+
+    if existing_docs:
+        logger.info(f"Found {len(existing_docs)} existing document(s) for project {project_id}")
+
     # Verify file is PDF (only check filename extension, ignore MIME type for cloud storage compatibility)
     if not file.filename or not file.filename.lower().endswith('.pdf'):
         logger.warning(f"Invalid file upload attempt: filename={file.filename}, content_type={file.content_type}")
@@ -85,6 +94,25 @@ async def process_pdf(
             detail=f"Failed to process PDF with Docling: {str(e)}"
         ) from e
 
+    # Delete existing documents and claims
+    if existing_docs:
+        # Delete claims first (will cascade delete claim_references)
+        claims_result = await session.execute(
+            select(Claim).where(Claim.project_id == project_id)
+        )
+        existing_claims = claims_result.scalars().all()
+        if existing_claims:
+            logger.info(f"Deleting {len(existing_claims)} existing claims")
+            for claim in existing_claims:
+                await session.delete(claim)
+
+        # Delete documents
+        for doc in existing_docs:
+            logger.info(f"Deleting document: {doc.id} - {doc.filename}")
+            await session.delete(doc)
+
+        await session.flush()  # Ensure deletions complete before creating new document
+
     # Update project with document info
     project.document_filename = file.filename
 
@@ -110,7 +138,7 @@ async def process_pdf(
     )
 
 
-@router.post("/text", response_model=TextExtractionResponse)
+@router.post("/text", response_model=TextExtractionResponse, operation_id="extractClaimsAndReferences")
 async def process_text(
     request: TextExtractionRequest,
     session: Annotated[AsyncSession, Depends(get_db)],

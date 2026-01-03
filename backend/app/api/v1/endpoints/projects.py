@@ -13,7 +13,7 @@ from app.schemas.project import ProjectCreate, ProjectOut, ProjectUpdate
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
-@router.get("/", response_model=PaginatedResponse[ProjectOut])
+@router.get("/", response_model=PaginatedResponse[ProjectOut], operation_id="listProjects")
 async def list_projects(
     page: int = Query(1, ge=1, description="Page number (1-indexed)"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
@@ -47,7 +47,7 @@ async def list_projects(
     )
 
 
-@router.post("/", response_model=ProjectOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=ProjectOut, status_code=status.HTTP_201_CREATED, operation_id="createProject")
 async def create_project(payload: ProjectCreate, db: AsyncSession = Depends(get_db)):
     project = Project(
         name=payload.name,
@@ -60,7 +60,7 @@ async def create_project(payload: ProjectCreate, db: AsyncSession = Depends(get_
     return project
 
 
-@router.get("/{project_id}", response_model=ProjectOut)
+@router.get("/{project_id}", response_model=ProjectOut, operation_id="getProject")
 async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     project = await db.get(Project, project_id)
     if not project:
@@ -68,7 +68,7 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     return project
 
 
-@router.put("/{project_id}", response_model=ProjectOut)
+@router.put("/{project_id}", response_model=ProjectOut, operation_id="updateProject")
 async def update_project(
     project_id: int,
     payload: ProjectUpdate,
@@ -87,7 +87,7 @@ async def update_project(
     return project
 
 
-@router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT, operation_id="deleteProject")
 async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
     project = await db.get(Project, project_id)
     if not project:

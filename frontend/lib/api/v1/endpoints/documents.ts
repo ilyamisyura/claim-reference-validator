@@ -56,7 +56,7 @@ Returns:
     Document with markdown content
  * @summary Get Document
  */
-export const getDocumentApiV1DocumentsDocumentIdGet = (
+export const getDocument = (
     documentId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<DocumentOut>> => {
     documentId = unref(documentId);
@@ -69,45 +69,45 @@ export const getDocumentApiV1DocumentsDocumentIdGet = (
 
 
 
-export const getGetDocumentApiV1DocumentsDocumentIdGetQueryKey = (documentId?: MaybeRef<number>,) => {
+export const getGetDocumentQueryKey = (documentId?: MaybeRef<number>,) => {
     return [
     'api','v1','documents',documentId
     ] as const;
     }
 
     
-export const getGetDocumentApiV1DocumentsDocumentIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>, TError = AxiosError<HTTPValidationError>>(documentId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetDocumentQueryOptions = <TData = Awaited<ReturnType<typeof getDocument>>, TError = AxiosError<HTTPValidationError>>(documentId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDocument>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getGetDocumentApiV1DocumentsDocumentIdGetQueryKey(documentId);
+  const queryKey =  getGetDocumentQueryKey(documentId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>> = ({ signal }) => getDocumentApiV1DocumentsDocumentIdGet(documentId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDocument>>> = ({ signal }) => getDocument(documentId, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(documentId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>, TError, TData> 
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(documentId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDocument>>, TError, TData> 
 }
 
-export type GetDocumentApiV1DocumentsDocumentIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>>
-export type GetDocumentApiV1DocumentsDocumentIdGetQueryError = AxiosError<HTTPValidationError>
+export type GetDocumentQueryResult = NonNullable<Awaited<ReturnType<typeof getDocument>>>
+export type GetDocumentQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary Get Document
  */
 
-export function useGetDocumentApiV1DocumentsDocumentIdGet<TData = Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>, TError = AxiosError<HTTPValidationError>>(
- documentId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDocumentApiV1DocumentsDocumentIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetDocument<TData = Awaited<ReturnType<typeof getDocument>>, TError = AxiosError<HTTPValidationError>>(
+ documentId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDocument>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getGetDocumentApiV1DocumentsDocumentIdGetQueryOptions(documentId,options)
+  const queryOptions = getGetDocumentQueryOptions(documentId,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -130,7 +130,7 @@ Returns:
     Success message
  * @summary Delete Document
  */
-export const deleteDocumentApiV1DocumentsDocumentIdDelete = (
+export const deleteDocument = (
     documentId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<unknown>> => {
     documentId = unref(documentId);
@@ -142,11 +142,11 @@ export const deleteDocumentApiV1DocumentsDocumentIdDelete = (
 
 
 
-export const getDeleteDocumentApiV1DocumentsDocumentIdDeleteMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>, TError,{documentId: number}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>, TError,{documentId: number}, TContext> => {
+export const getDeleteDocumentMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDocument>>, TError,{documentId: number}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteDocument>>, TError,{documentId: number}, TContext> => {
 
-const mutationKey = ['deleteDocumentApiV1DocumentsDocumentIdDelete'];
+const mutationKey = ['deleteDocument'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -156,10 +156,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>, {documentId: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteDocument>>, {documentId: number}> = (props) => {
           const {documentId} = props ?? {};
 
-          return  deleteDocumentApiV1DocumentsDocumentIdDelete(documentId,axiosOptions)
+          return  deleteDocument(documentId,axiosOptions)
         }
 
         
@@ -167,23 +167,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteDocumentApiV1DocumentsDocumentIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>>
+    export type DeleteDocumentMutationResult = NonNullable<Awaited<ReturnType<typeof deleteDocument>>>
     
-    export type DeleteDocumentApiV1DocumentsDocumentIdDeleteMutationError = AxiosError<HTTPValidationError>
+    export type DeleteDocumentMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Delete Document
  */
-export const useDeleteDocumentApiV1DocumentsDocumentIdDelete = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>, TError,{documentId: number}, TContext>, axios?: AxiosRequestConfig}
+export const useDeleteDocument = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDocument>>, TError,{documentId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof deleteDocumentApiV1DocumentsDocumentIdDelete>>,
+        Awaited<ReturnType<typeof deleteDocument>>,
         TError,
         {documentId: number},
         TContext
       > => {
 
-      const mutationOptions = getDeleteDocumentApiV1DocumentsDocumentIdDeleteMutationOptions(options);
+      const mutationOptions = getDeleteDocumentMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -198,7 +198,7 @@ Returns:
     List of documents for the project
  * @summary Get Project Documents
  */
-export const getProjectDocumentsApiV1DocumentsProjectProjectIdGet = (
+export const listProjectDocuments = (
     projectId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<DocumentOut[]>> => {
     projectId = unref(projectId);
@@ -211,45 +211,45 @@ export const getProjectDocumentsApiV1DocumentsProjectProjectIdGet = (
 
 
 
-export const getGetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryKey = (projectId?: MaybeRef<number>,) => {
+export const getListProjectDocumentsQueryKey = (projectId?: MaybeRef<number>,) => {
     return [
     'api','v1','documents','project',projectId
     ] as const;
     }
 
     
-export const getGetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>, TError = AxiosError<HTTPValidationError>>(projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getListProjectDocumentsQueryOptions = <TData = Awaited<ReturnType<typeof listProjectDocuments>>, TError = AxiosError<HTTPValidationError>>(projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjectDocuments>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getGetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryKey(projectId);
+  const queryKey =  getListProjectDocumentsQueryKey(projectId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>> = ({ signal }) => getProjectDocumentsApiV1DocumentsProjectProjectIdGet(projectId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjectDocuments>>> = ({ signal }) => listProjectDocuments(projectId, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(projectId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>, TError, TData> 
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(projectId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProjectDocuments>>, TError, TData> 
 }
 
-export type GetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>>
-export type GetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryError = AxiosError<HTTPValidationError>
+export type ListProjectDocumentsQueryResult = NonNullable<Awaited<ReturnType<typeof listProjectDocuments>>>
+export type ListProjectDocumentsQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary Get Project Documents
  */
 
-export function useGetProjectDocumentsApiV1DocumentsProjectProjectIdGet<TData = Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>, TError = AxiosError<HTTPValidationError>>(
- projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectDocumentsApiV1DocumentsProjectProjectIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useListProjectDocuments<TData = Awaited<ReturnType<typeof listProjectDocuments>>, TError = AxiosError<HTTPValidationError>>(
+ projectId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjectDocuments>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getGetProjectDocumentsApiV1DocumentsProjectProjectIdGetQueryOptions(projectId,options)
+  const queryOptions = getListProjectDocumentsQueryOptions(projectId,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 

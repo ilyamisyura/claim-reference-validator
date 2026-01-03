@@ -5,6 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ProcessPdfApiV1ProcessPdfPostParams = {
-project_id: number;
+export type LinkClaimToReferenceParams = {
+relevance_score?: number | null;
+context?: string | null;
 };

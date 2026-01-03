@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ListProjectsApiV1ProjectsGetParams = {
+export type ListProjectsParams = {
 /**
  * Page number (1-indexed)
  * @minimum 1

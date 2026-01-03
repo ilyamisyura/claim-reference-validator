@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 
-@router.get("/{document_id}", response_model=DocumentOut)
+@router.get("/{document_id}", response_model=DocumentOut, operation_id="getDocument")
 async def get_document(
     document_id: int,
     session: AsyncSession = Depends(get_db),
@@ -42,7 +42,7 @@ async def get_document(
     return document
 
 
-@router.get("/project/{project_id}", response_model=List[DocumentOut])
+@router.get("/project/{project_id}", response_model=List[DocumentOut], operation_id="listProjectDocuments")
 async def get_project_documents(
     project_id: int,
     session: AsyncSession = Depends(get_db),
@@ -67,7 +67,7 @@ async def get_project_documents(
     return list(documents)
 
 
-@router.delete("/{document_id}")
+@router.delete("/{document_id}", operation_id="deleteDocument")
 async def delete_document(
     document_id: int,
     session: AsyncSession = Depends(get_db),

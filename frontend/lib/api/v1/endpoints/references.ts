@@ -37,7 +37,7 @@ import type {
 
 import type {
   HTTPValidationError,
-  ListReferencesApiV1ReferencesGetParams,
+  ListReferencesParams,
   PaginatedResponseReferenceOut,
   ReferenceCreate,
   ReferenceOut,
@@ -53,8 +53,8 @@ import type {
  * List all references with pagination.
  * @summary List References
  */
-export const listReferencesApiV1ReferencesGet = (
-    params?: MaybeRef<ListReferencesApiV1ReferencesGetParams>, options?: AxiosRequestConfig
+export const listReferences = (
+    params?: MaybeRef<ListReferencesParams>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<PaginatedResponseReferenceOut>> => {
     params = unref(params);
     
@@ -68,45 +68,45 @@ export const listReferencesApiV1ReferencesGet = (
 
 
 
-export const getListReferencesApiV1ReferencesGetQueryKey = (params?: MaybeRef<ListReferencesApiV1ReferencesGetParams>,) => {
+export const getListReferencesQueryKey = (params?: MaybeRef<ListReferencesParams>,) => {
     return [
     'api','v1','references', ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getListReferencesApiV1ReferencesGetQueryOptions = <TData = Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListReferencesApiV1ReferencesGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getListReferencesQueryOptions = <TData = Awaited<ReturnType<typeof listReferences>>, TError = AxiosError<HTTPValidationError>>(params?: MaybeRef<ListReferencesParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listReferences>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getListReferencesApiV1ReferencesGetQueryKey(params);
+  const queryKey =  getListReferencesQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>> = ({ signal }) => listReferencesApiV1ReferencesGet(params, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listReferences>>> = ({ signal }) => listReferences(params, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>, TError, TData> 
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listReferences>>, TError, TData> 
 }
 
-export type ListReferencesApiV1ReferencesGetQueryResult = NonNullable<Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>>
-export type ListReferencesApiV1ReferencesGetQueryError = AxiosError<HTTPValidationError>
+export type ListReferencesQueryResult = NonNullable<Awaited<ReturnType<typeof listReferences>>>
+export type ListReferencesQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary List References
  */
 
-export function useListReferencesApiV1ReferencesGet<TData = Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>, TError = AxiosError<HTTPValidationError>>(
- params?: MaybeRef<ListReferencesApiV1ReferencesGetParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listReferencesApiV1ReferencesGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useListReferences<TData = Awaited<ReturnType<typeof listReferences>>, TError = AxiosError<HTTPValidationError>>(
+ params?: MaybeRef<ListReferencesParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listReferences>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getListReferencesApiV1ReferencesGetQueryOptions(params,options)
+  const queryOptions = getListReferencesQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -128,7 +128,7 @@ Deduplication strategy:
 4. Otherwise, create new reference
  * @summary Create Reference
  */
-export const createReferenceApiV1ReferencesPost = (
+export const createReference = (
     referenceCreate: MaybeRef<ReferenceCreate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ReferenceOut>> => {
     referenceCreate = unref(referenceCreate);
@@ -141,11 +141,11 @@ export const createReferenceApiV1ReferencesPost = (
 
 
 
-export const getCreateReferenceApiV1ReferencesPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>, TError,{data: ReferenceCreate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>, TError,{data: ReferenceCreate}, TContext> => {
+export const getCreateReferenceMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReference>>, TError,{data: ReferenceCreate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof createReference>>, TError,{data: ReferenceCreate}, TContext> => {
 
-const mutationKey = ['createReferenceApiV1ReferencesPost'];
+const mutationKey = ['createReference'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -155,10 +155,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>, {data: ReferenceCreate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createReference>>, {data: ReferenceCreate}> = (props) => {
           const {data} = props ?? {};
 
-          return  createReferenceApiV1ReferencesPost(data,axiosOptions)
+          return  createReference(data,axiosOptions)
         }
 
         
@@ -166,23 +166,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateReferenceApiV1ReferencesPostMutationResult = NonNullable<Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>>
-    export type CreateReferenceApiV1ReferencesPostMutationBody = ReferenceCreate
-    export type CreateReferenceApiV1ReferencesPostMutationError = AxiosError<HTTPValidationError>
+    export type CreateReferenceMutationResult = NonNullable<Awaited<ReturnType<typeof createReference>>>
+    export type CreateReferenceMutationBody = ReferenceCreate
+    export type CreateReferenceMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Create Reference
  */
-export const useCreateReferenceApiV1ReferencesPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>, TError,{data: ReferenceCreate}, TContext>, axios?: AxiosRequestConfig}
+export const useCreateReference = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReference>>, TError,{data: ReferenceCreate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof createReferenceApiV1ReferencesPost>>,
+        Awaited<ReturnType<typeof createReference>>,
         TError,
         {data: ReferenceCreate},
         TContext
       > => {
 
-      const mutationOptions = getCreateReferenceApiV1ReferencesPostMutationOptions(options);
+      const mutationOptions = getCreateReferenceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -190,7 +190,7 @@ export const useCreateReferenceApiV1ReferencesPost = <TError = AxiosError<HTTPVa
  * Get a specific reference by ID.
  * @summary Get Reference
  */
-export const getReferenceApiV1ReferencesReferenceIdGet = (
+export const getReference = (
     referenceId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ReferenceOut>> => {
     referenceId = unref(referenceId);
@@ -203,45 +203,45 @@ export const getReferenceApiV1ReferencesReferenceIdGet = (
 
 
 
-export const getGetReferenceApiV1ReferencesReferenceIdGetQueryKey = (referenceId?: MaybeRef<number>,) => {
+export const getGetReferenceQueryKey = (referenceId?: MaybeRef<number>,) => {
     return [
     'api','v1','references',referenceId
     ] as const;
     }
 
     
-export const getGetReferenceApiV1ReferencesReferenceIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>, TError = AxiosError<HTTPValidationError>>(referenceId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetReferenceQueryOptions = <TData = Awaited<ReturnType<typeof getReference>>, TError = AxiosError<HTTPValidationError>>(referenceId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReference>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  getGetReferenceApiV1ReferencesReferenceIdGetQueryKey(referenceId);
+  const queryKey =  getGetReferenceQueryKey(referenceId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>> = ({ signal }) => getReferenceApiV1ReferencesReferenceIdGet(referenceId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReference>>> = ({ signal }) => getReference(referenceId, { signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(referenceId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>, TError, TData> 
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(referenceId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReference>>, TError, TData> 
 }
 
-export type GetReferenceApiV1ReferencesReferenceIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>>
-export type GetReferenceApiV1ReferencesReferenceIdGetQueryError = AxiosError<HTTPValidationError>
+export type GetReferenceQueryResult = NonNullable<Awaited<ReturnType<typeof getReference>>>
+export type GetReferenceQueryError = AxiosError<HTTPValidationError>
 
 
 /**
  * @summary Get Reference
  */
 
-export function useGetReferenceApiV1ReferencesReferenceIdGet<TData = Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>, TError = AxiosError<HTTPValidationError>>(
- referenceId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReferenceApiV1ReferencesReferenceIdGet>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetReference<TData = Awaited<ReturnType<typeof getReference>>, TError = AxiosError<HTTPValidationError>>(
+ referenceId: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReference>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
-  const queryOptions = getGetReferenceApiV1ReferencesReferenceIdGetQueryOptions(referenceId,options)
+  const queryOptions = getGetReferenceQueryOptions(referenceId,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
@@ -257,7 +257,7 @@ export function useGetReferenceApiV1ReferencesReferenceIdGet<TData = Awaited<Ret
  * Update a reference.
  * @summary Update Reference
  */
-export const updateReferenceApiV1ReferencesReferenceIdPut = (
+export const updateReference = (
     referenceId: MaybeRef<number>,
     referenceUpdate: MaybeRef<ReferenceUpdate>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ReferenceOut>> => {
@@ -272,11 +272,11 @@ referenceUpdate = unref(referenceUpdate);
 
 
 
-export const getUpdateReferenceApiV1ReferencesReferenceIdPutMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext> => {
+export const getUpdateReferenceMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReference>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof updateReference>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext> => {
 
-const mutationKey = ['updateReferenceApiV1ReferencesReferenceIdPut'];
+const mutationKey = ['updateReference'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -286,10 +286,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>, {referenceId: number;data: ReferenceUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateReference>>, {referenceId: number;data: ReferenceUpdate}> = (props) => {
           const {referenceId,data} = props ?? {};
 
-          return  updateReferenceApiV1ReferencesReferenceIdPut(referenceId,data,axiosOptions)
+          return  updateReference(referenceId,data,axiosOptions)
         }
 
         
@@ -297,23 +297,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UpdateReferenceApiV1ReferencesReferenceIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>>
-    export type UpdateReferenceApiV1ReferencesReferenceIdPutMutationBody = ReferenceUpdate
-    export type UpdateReferenceApiV1ReferencesReferenceIdPutMutationError = AxiosError<HTTPValidationError>
+    export type UpdateReferenceMutationResult = NonNullable<Awaited<ReturnType<typeof updateReference>>>
+    export type UpdateReferenceMutationBody = ReferenceUpdate
+    export type UpdateReferenceMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Update Reference
  */
-export const useUpdateReferenceApiV1ReferencesReferenceIdPut = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext>, axios?: AxiosRequestConfig}
+export const useUpdateReference = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReference>>, TError,{referenceId: number;data: ReferenceUpdate}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof updateReferenceApiV1ReferencesReferenceIdPut>>,
+        Awaited<ReturnType<typeof updateReference>>,
         TError,
         {referenceId: number;data: ReferenceUpdate},
         TContext
       > => {
 
-      const mutationOptions = getUpdateReferenceApiV1ReferencesReferenceIdPutMutationOptions(options);
+      const mutationOptions = getUpdateReferenceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -321,7 +321,7 @@ export const useUpdateReferenceApiV1ReferencesReferenceIdPut = <TError = AxiosEr
  * Delete a reference.
  * @summary Delete Reference
  */
-export const deleteReferenceApiV1ReferencesReferenceIdDelete = (
+export const deleteReference = (
     referenceId: MaybeRef<number>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<void>> => {
     referenceId = unref(referenceId);
@@ -333,11 +333,11 @@ export const deleteReferenceApiV1ReferencesReferenceIdDelete = (
 
 
 
-export const getDeleteReferenceApiV1ReferencesReferenceIdDeleteMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>, TError,{referenceId: number}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>, TError,{referenceId: number}, TContext> => {
+export const getDeleteReferenceMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReference>>, TError,{referenceId: number}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteReference>>, TError,{referenceId: number}, TContext> => {
 
-const mutationKey = ['deleteReferenceApiV1ReferencesReferenceIdDelete'];
+const mutationKey = ['deleteReference'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -347,10 +347,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>, {referenceId: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteReference>>, {referenceId: number}> = (props) => {
           const {referenceId} = props ?? {};
 
-          return  deleteReferenceApiV1ReferencesReferenceIdDelete(referenceId,axiosOptions)
+          return  deleteReference(referenceId,axiosOptions)
         }
 
         
@@ -358,23 +358,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteReferenceApiV1ReferencesReferenceIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>>
+    export type DeleteReferenceMutationResult = NonNullable<Awaited<ReturnType<typeof deleteReference>>>
     
-    export type DeleteReferenceApiV1ReferencesReferenceIdDeleteMutationError = AxiosError<HTTPValidationError>
+    export type DeleteReferenceMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Delete Reference
  */
-export const useDeleteReferenceApiV1ReferencesReferenceIdDelete = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>, TError,{referenceId: number}, TContext>, axios?: AxiosRequestConfig}
+export const useDeleteReference = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReference>>, TError,{referenceId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof deleteReferenceApiV1ReferencesReferenceIdDelete>>,
+        Awaited<ReturnType<typeof deleteReference>>,
         TError,
         {referenceId: number},
         TContext
       > => {
 
-      const mutationOptions = getDeleteReferenceApiV1ReferencesReferenceIdDeleteMutationOptions(options);
+      const mutationOptions = getDeleteReferenceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -384,7 +384,7 @@ export const useDeleteReferenceApiV1ReferencesReferenceIdDelete = <TError = Axio
 Returns list of reference IDs (existing or newly created).
  * @summary Bulk Create References
  */
-export const bulkCreateReferencesApiV1ReferencesBulkPost = (
+export const bulkCreateReferences = (
     referenceCreate: MaybeRef<ReferenceCreate[]>, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ReferenceOut[]>> => {
     referenceCreate = unref(referenceCreate);
@@ -397,11 +397,11 @@ export const bulkCreateReferencesApiV1ReferencesBulkPost = (
 
 
 
-export const getBulkCreateReferencesApiV1ReferencesBulkPostMutationOptions = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>, TError,{data: ReferenceCreate[]}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>, TError,{data: ReferenceCreate[]}, TContext> => {
+export const getBulkCreateReferencesMutationOptions = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferences>>, TError,{data: ReferenceCreate[]}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferences>>, TError,{data: ReferenceCreate[]}, TContext> => {
 
-const mutationKey = ['bulkCreateReferencesApiV1ReferencesBulkPost'];
+const mutationKey = ['bulkCreateReferences'];
 const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -411,10 +411,10 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>, {data: ReferenceCreate[]}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bulkCreateReferences>>, {data: ReferenceCreate[]}> = (props) => {
           const {data} = props ?? {};
 
-          return  bulkCreateReferencesApiV1ReferencesBulkPost(data,axiosOptions)
+          return  bulkCreateReferences(data,axiosOptions)
         }
 
         
@@ -422,23 +422,23 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type BulkCreateReferencesApiV1ReferencesBulkPostMutationResult = NonNullable<Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>>
-    export type BulkCreateReferencesApiV1ReferencesBulkPostMutationBody = ReferenceCreate[]
-    export type BulkCreateReferencesApiV1ReferencesBulkPostMutationError = AxiosError<HTTPValidationError>
+    export type BulkCreateReferencesMutationResult = NonNullable<Awaited<ReturnType<typeof bulkCreateReferences>>>
+    export type BulkCreateReferencesMutationBody = ReferenceCreate[]
+    export type BulkCreateReferencesMutationError = AxiosError<HTTPValidationError>
 
     /**
  * @summary Bulk Create References
  */
-export const useBulkCreateReferencesApiV1ReferencesBulkPost = <TError = AxiosError<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>, TError,{data: ReferenceCreate[]}, TContext>, axios?: AxiosRequestConfig}
+export const useBulkCreateReferences = <TError = AxiosError<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateReferences>>, TError,{data: ReferenceCreate[]}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof bulkCreateReferencesApiV1ReferencesBulkPost>>,
+        Awaited<ReturnType<typeof bulkCreateReferences>>,
         TError,
         {data: ReferenceCreate[]},
         TContext
       > => {
 
-      const mutationOptions = getBulkCreateReferencesApiV1ReferencesBulkPostMutationOptions(options);
+      const mutationOptions = getBulkCreateReferencesMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
